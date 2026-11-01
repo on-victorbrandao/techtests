@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cogna-etl"
+version = "0.1.0"
+description = "Pipeline de ETL e analytics para teste tecnico Cogna Educacao"
+authors = [{ name = "Victor Amorim" }]
+requires-python = ">=3.11"
+dependencies = [
+    "pandas>=3.0.0",
+    "pyarrow>=26.0.0",
+    "duckdb>=2.0.0",
+    "openpyxl>=3.1.5",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = []
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
