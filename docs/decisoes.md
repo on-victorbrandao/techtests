@@ -39,3 +39,21 @@ Este documento registra todas as decisões arquiteturais, premissas de negócio 
   5. **Atribuição de Recontato ao Agente (Q9):** Recontato no mesmo dia é computado quando o mesmo aluno retorna no mesmo dia calendário, atribuindo o recontato ao agente que realizou o atendimento imediatamente anterior.
   6. **WhatsApp - Duração e TME:** Tratados e padronizados na unidade de segundos (`int`).
   7. **Modalidade Divergente da Tabulação:** Caso a modalidade cadastral divirja do texto da tabulação (ex.: Presencial vs EAD), prevalece o dado cadastral do aluno; a divergência será sinalizada através de uma flag booleana (`flag_divergencia_modalidade`).
+
+---
+
+## DEC-004: Definição das Fontes de Dados para as Camadas Bronze e Silver
+- **Data:** 01/11/2026
+- **Status:** Aprovada
+- **Contexto:** Na exportação manual das abas do Excel para CSV, houve perda de precisão em timestamps (omissão dos segundos em WhatsApp, Totem e Call Center) e em 16 números de protocolo no Call Center (convertidos para notação científica `1,44496E+18` pelo Excel no locale pt-BR). A planilha `analytical_database_callcenter.xlsx` preserva os segundos e o float numérico completo desses protocolos.
+- **Decisão:**
+  1. **Referência da Bronze:** Os CSVs exportados são a referência exclusiva da camada Bronze (`data/bronze/`), garantindo fidelidade estrita aos arquivos CSV brutos recebidos.
+  2. **Fonte Oficial da Silver:** A planilha original `analytical_database_callcenter.xlsx` é a fonte oficial dos timestamps e dos valores numéricos com precisão preservada.
+  3. **Ingestão na Silver:** Na camada Silver, a leitura será realizada diretamente das abas analíticas do XLSX, aplicando o mapeamento padronizado de colunas em `snake_case` já definido no projeto. O XLSX preserva o valor nele armazenado, mas não garante recuperação de todos os dígitos originais dos protocolos numéricos.
+  4. **Proibição de Join por Aluno para Restaurar Horários:** Fica vedada a tentativa de enriquecer os CSVs via join baseado apenas no `identificador_aluno`, uma vez que um mesmo aluno possui múltiplos registros no histórico.
+  5. **Imutabilidade Raw:** Nenhum arquivo bruto em `data/raw/` será alterado.
+  6. **Reconciliação e Diferenças Esperadas (Silver vs Bronze/XLSX):**
+     - A entrada da Silver será reconciliada com o XLSX. Qualquer redução posterior terá regra e contagem documentadas.
+     - Quantidade de linhas e identificadores de aluno de entrada serão exatamente iguais entre XLSX e Silver.
+     - As colunas de data/hora na Silver conterão os segundos preservados da planilha original (enquanto na Bronze os segundos estavam ausentes nos CSVs de Call Center, WhatsApp e Totem).
+     - Os 16 protocolos com notação científica na Bronze serão carregados com os valores numéricos do XLSX na Silver, ciente de que o XLSX preserva o valor nele armazenado, mas não garante recuperação de todos os dígitos originais dos protocolos numéricos que já sofreram perda de precisão no armazenamento de ponto flutuante.

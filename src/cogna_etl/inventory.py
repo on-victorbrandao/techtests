@@ -1,4 +1,4 @@
-"""Modulo de inventario e reconciliacao inicial dos arquivos brutos."""
+"""Inventario e reconciliacao inicial dos arquivos brutos."""
 
 import csv
 from pathlib import Path
@@ -7,7 +7,7 @@ import openpyxl
 
 
 def detect_encoding(file_path: Path) -> str:
-    # Testar codificacoes comuns para identificar compatibilidade
+    # testa codificacoes comuns para identificar a correta
     for enc in ["utf-8-sig", "utf-8", "cp1252", "latin-1"]:
         try:
             with open(file_path, "r", encoding=enc) as f:
@@ -19,20 +19,21 @@ def detect_encoding(file_path: Path) -> str:
 
 
 def get_csv_metrics(file_path: Path) -> dict:
+    # identifica a codificacao e o tamanho do arquivo
     enc = detect_encoding(file_path)
     size_bytes = file_path.stat().st_size
 
     with open(file_path, "r", encoding=enc, newline="") as f:
-        # Linhas de texto brutas (quebras de linha fisicas)
+        # conta quebras de linha fisicas do arquivo
         raw_lines = sum(1 for _ in f)
 
-        # Registros logicos via csv.reader (respeitando aspas e multilinhas)
+        # le os registros considerando campos entre aspas com quebra de linha
         f.seek(0)
         reader = list(csv.reader(f, delimiter=";"))
         parsed_records = len(reader)
         header = reader[0] if reader else []
 
-        # Contagem de linhas nao vazias
+        # filtra linhas que possuem conteudo util
         non_empty_records = [r for r in reader if any(cell.strip() != "" for cell in r)]
 
     return {
@@ -50,11 +51,13 @@ def get_csv_metrics(file_path: Path) -> dict:
 
 
 def get_xlsx_sheet_metrics(wb: openpyxl.Workbook, sheet_name: str) -> dict:
+    # le as linhas da aba do excel
     sheet = wb[sheet_name]
     rows = list(sheet.iter_rows(values_only=True))
     total_rows = len(rows)
     header = [str(c) if c is not None else "" for c in rows[0]] if rows else []
 
+    # filtra linhas com ao menos uma celula preenchida
     non_empty_rows = [
         r for r in rows if any(c is not None and str(c).strip() != "" for c in r)
     ]
@@ -70,6 +73,7 @@ def get_xlsx_sheet_metrics(wb: openpyxl.Workbook, sheet_name: str) -> dict:
 
 
 def run_inventory(raw_dir_path: str = "data/raw") -> dict:
+    # prepara o caminho dos arquivos de entrada
     raw_dir = Path(raw_dir_path)
     xlsx_path = raw_dir / "analytical_database_callcenter.xlsx"
 
@@ -97,18 +101,12 @@ def run_inventory(raw_dir_path: str = "data/raw") -> dict:
     wb = openpyxl.load_workbook(xlsx_path, read_only=True, data_only=True)
     results = []
 
-    print("=" * 110)
-    print(
-        f"{'Tabela / Arquivo':<42} | {'Tam (KB)':<8} | {'Cols':<4} | "
-        f"{'Linhas CSV':<10} | {'Linhas XLSX':<11} | {'Status':<10}"
-    )
-    print("=" * 110)
-
     for csv_name, sheet_name in csv_to_sheet.items():
         csv_file = raw_dir / csv_name
         csv_m = get_csv_metrics(csv_file)
         xlsx_m = get_xlsx_sheet_metrics(wb, sheet_name)
 
+        # valida se as contagens batem exatamente
         rows_match = csv_m["parsed_records"] == xlsx_m["total_rows"]
         cols_match = csv_m["header_cols_count"] == xlsx_m["cols_count"]
         status = "RECONCILIADO" if rows_match and cols_match else "DIVERGENTE"
@@ -125,10 +123,10 @@ def run_inventory(raw_dir_path: str = "data/raw") -> dict:
 
         kb = csv_m["size_bytes"] / 1024
         print(
-            f"{csv_name:<42} | {kb:8.1f} | {csv_m['header_cols_count']:4} | "
-            f"{csv_m['parsed_records']:10} | {xlsx_m['total_rows']:11} | {status:<10}"
+            f"{csv_name} | {kb:.1f} KB | {csv_m['header_cols_count']} cols | "
+            f"CSV: {csv_m['parsed_records']} | XLSX: {xlsx_m['total_rows']} | "
+            f"{status}"
         )
 
     wb.close()
-    print("=" * 110)
     return results

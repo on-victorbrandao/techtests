@@ -1,4 +1,4 @@
-"""Testes automatizados de setup, inventario e reconciliacao da Fase 0."""
+"""Testes de setup e inventario dos arquivos brutos da Fase 0."""
 
 from pathlib import Path
 
@@ -13,12 +13,14 @@ from cogna_etl.inventory import (
 
 @pytest.fixture(scope="module")
 def raw_path() -> Path:
+    # aponta para o diretorio com os arquivos brutos
     p = Path("data/raw")
-    assert p.exists(), "Diretorio data/raw deve existir."
+    assert p.exists()
     return p
 
 
 def test_raw_files_exist_and_readonly(raw_path: Path):
+    # valida se todos os 9 arquivos brutos estao presentes na pasta raw
     expected_files = [
         "analytical_database_callcenter.analitico_callcenter.csv",
         "analytical_database_callcenter.dicionario_callcenter.csv",
@@ -95,6 +97,7 @@ def test_csv_reconciliation_with_xlsx(
     expected_cols: int,
     expected_rows: int,
 ):
+    # compara contagens de linhas e colunas entre csv e aba do excel
     csv_file = raw_path / csv_name
     xlsx_file = raw_path / "analytical_database_callcenter.xlsx"
 
