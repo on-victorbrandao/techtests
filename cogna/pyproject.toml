@@ -23,6 +23,14 @@ target-version = "py311"
 select = ["E", "F", "W", "I"]
 ignore = []
 
+[tool.ruff.lint.per-file-ignores]
+# consultas SQL em texto nos testes da silver e gold passam de 88 colunas
+"tests/test_fase3.py" = ["E501"]
+"tests/test_fase4.py" = ["E501"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
+pythonpath = ["src"]
+markers = ["integration: marks integration tests"]
+
