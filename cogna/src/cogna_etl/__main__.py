@@ -52,6 +52,12 @@ def main() -> None:
             f"  Filas Call Center: coinc={q['coincident_queues']}, "
             f"diverg={q['divergent_queues']}"
         )
+    elif cmd == "silver":
+        from cogna_etl.silver import run_silver
+
+        res = run_silver()
+        for tabela, (qtd_in, qtd_out) in res.items():
+            print(f"[Silver] {tabela}: {qtd_in} linhas de entrada, {qtd_out} de saida")
     elif cmd == "all":
         from cogna_etl.bronze import normalize_bronze
         from cogna_etl.dictionaries import generate_all_dictionaries
@@ -67,7 +73,7 @@ def main() -> None:
     else:
         print(
             "Uso: python -m cogna_etl "
-            "[inventory|bronze|dictionaries|integrity|profiling|all]"
+            "[inventory|bronze|dictionaries|integrity|profiling|silver|all]"
         )
 
 
