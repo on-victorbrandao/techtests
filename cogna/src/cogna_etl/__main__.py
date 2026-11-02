@@ -58,22 +58,32 @@ def main() -> None:
         res = run_silver()
         for tabela, (qtd_in, qtd_out) in res.items():
             print(f"[Silver] {tabela}: {qtd_in} linhas de entrada, {qtd_out} de saida")
+    elif cmd == "gold":
+        from cogna_etl.gold import run_gold
+
+        res = run_gold()
+        for tabela, qtd in res.items():
+            print(f"[Gold] {tabela}: {qtd} linhas")
     elif cmd == "all":
         from cogna_etl.bronze import normalize_bronze
         from cogna_etl.dictionaries import generate_all_dictionaries
+        from cogna_etl.gold import run_gold
         from cogna_etl.integrity import verify_content_integrity
         from cogna_etl.inventory import run_inventory
         from cogna_etl.profiling import run_full_profiling
+        from cogna_etl.silver import run_silver
 
         run_inventory()
         normalize_bronze()
         generate_all_dictionaries()
         verify_content_integrity()
         run_full_profiling()
+        run_silver()
+        run_gold()
     else:
         print(
             "Uso: python -m cogna_etl "
-            "[inventory|bronze|dictionaries|integrity|profiling|silver|all]"
+            "[inventory|bronze|dictionaries|integrity|profiling|silver|gold|all]"
         )
 
 
