@@ -1,0 +1,385 @@
+-- Display Folder: 05. Jornada e recontato (Q1, Q2, Q9) | Format String: #,0
+#01_Q1_Alunos_Call_Center_WhatsApp_Posterior = 
+
+CALCULATE (
+    DISTINCTCOUNT ( fato_jornada[aluno_hash] ),
+    fato_jornada[canal] = "call_center",
+    fato_jornada[flag_teve_wa_posterior] = TRUE ()
+)
+
+-- Display Folder: 05. Jornada e recontato (Q1, Q2, Q9) | Format String: 0.00%
+#02_Q1_%_Alunos_Call_Center_WhatsApp_Posterior = 
+
+var _alunosComWhatsAppPosterior = [#01_Q1_Alunos_Call_Center_WhatsApp_Posterior]
+var _totalAlunosCallCenter =
+    CALCULATE (
+        DISTINCTCOUNT ( fato_jornada[aluno_hash] ),
+        fato_jornada[canal] = "call_center"
+    )
+
+return
+    DIVIDE ( _alunosComWhatsAppPosterior, _totalAlunosCallCenter, BLANK () )
+
+-- Display Folder: 05. Jornada e recontato (Q1, Q2, Q9) | Format String: #,0
+#03_Q1_Contatos_Call_Center_WhatsApp_Posterior = 
+
+CALCULATE (
+    COUNTROWS ( fato_jornada ),
+    fato_jornada[canal] = "call_center",
+    fato_jornada[flag_teve_wa_posterior] = TRUE ()
+)
+
+-- Display Folder: 05. Jornada e recontato (Q1, Q2, Q9) | Format String: 0.00%
+#04_Q1_%_Contatos_Call_Center_WhatsApp_Posterior = 
+
+var _contatosComWhatsAppPosterior = [#03_Q1_Contatos_Call_Center_WhatsApp_Posterior]
+var _totalContatosCallCenter =
+    CALCULATE (
+        COUNTROWS ( fato_jornada ),
+        fato_jornada[canal] = "call_center"
+    )
+
+return
+    DIVIDE ( _contatosComWhatsAppPosterior, _totalContatosCallCenter, BLANK () )
+
+-- Display Folder: 05. Jornada e recontato (Q1, Q2, Q9) | Format String: #,0
+#05_Q1_Contatos_CC_Transicao_Imediata_WhatsApp = 
+
+CALCULATE (
+    COUNTROWS ( fato_jornada ),
+    fato_jornada[canal] = "call_center",
+    fato_jornada[canal_proximo] = "whatsapp"
+)
+
+-- Display Folder: 05. Jornada e recontato (Q1, Q2, Q9) | Format String: #,0
+#06_Q1_%_Transicao_Imediata_CC_WhatsApp = 
+
+var _contatosTransicaoImediata = [#05_Q1_Contatos_CC_Transicao_Imediata_WhatsApp]
+var _totalContatosCallCenter =
+    CALCULATE (
+        COUNTROWS ( fato_jornada ),
+        fato_jornada[canal] = "call_center"
+    )
+
+return
+    DIVIDE ( _contatosTransicaoImediata, _totalContatosCallCenter, BLANK () )
+
+-- Display Folder: 05. Jornada e recontato (Q1, Q2, Q9) | Format String: #,0
+#07_Q1_Contatos_CC_WhatsApp_Posterior_Intermediarios = 
+
+var _totalPosterior = [#03_Q1_Contatos_Call_Center_WhatsApp_Posterior]
+var _transicaoImediata = [#05_Q1_Contatos_CC_Transicao_Imediata_WhatsApp]
+
+return
+    _totalPosterior - _transicaoImediata
+
+-- Display Folder: 05. Jornada e recontato (Q1, Q2, Q9) | Format String: #,0
+#08_Q1_Contatos_CC_Sem_WhatsApp_Posterior = 
+
+CALCULATE (
+    COUNTROWS ( fato_jornada ),
+    fato_jornada[canal] = "call_center",
+    fato_jornada[flag_teve_wa_posterior] = FALSE ()
+)
+
+-- Display Folder: 05. Jornada e recontato (Q1, Q2, Q9) | Format String: #,0
+#09_Q1_Contatos_Call_Center_WhatsApp_24h = 
+
+var _contatosCallCenter =
+    CALCULATETABLE (
+        SUMMARIZE (
+            fato_jornada,
+            fato_jornada[contato_id],
+            fato_jornada[aluno_hash],
+            fato_jornada[data_hora_contato]
+        ),
+        fato_jornada[canal] = "call_center",
+        fato_jornada[flag_teve_wa_posterior] = TRUE ()
+    )
+var _contatosSeguidosAte24h =
+    FILTER (
+        _contatosCallCenter,
+        var _alunoHash = fato_jornada[aluno_hash]
+        var _dataHoraCallCenter = fato_jornada[data_hora_contato]
+        var _primeiroWhatsAppAposCallCenter =
+            CALCULATE (
+                MIN ( fato_jornada[data_hora_contato] ),
+                ALL ( fato_jornada ),
+                fato_jornada[aluno_hash] = _alunoHash,
+                fato_jornada[canal] = "whatsapp",
+                fato_jornada[data_hora_contato] > _dataHoraCallCenter
+            )
+
+return
+            NOT ISBLANK ( _primeiroWhatsAppAposCallCenter )
+                && DATEDIFF ( _dataHoraCallCenter, _primeiroWhatsAppAposCallCenter, SECOND ) <= 86400
+    )
+return
+    COUNTROWS ( _contatosSeguidosAte24h )
+
+-- Display Folder: 05. Jornada e recontato (Q1, Q2, Q9) | Format String: #,0
+#10_Q1_Contatos_Call_Center_WhatsApp_7d = 
+
+var _contatosCallCenter =
+    CALCULATETABLE (
+        SUMMARIZE (
+            fato_jornada,
+            fato_jornada[contato_id],
+            fato_jornada[aluno_hash],
+            fato_jornada[data_hora_contato]
+        ),
+        fato_jornada[canal] = "call_center",
+        fato_jornada[flag_teve_wa_posterior] = TRUE ()
+    )
+var _contatosSeguidosAte7Dias =
+    FILTER (
+        _contatosCallCenter,
+        var _alunoHash = fato_jornada[aluno_hash]
+        var _dataHoraCallCenter = fato_jornada[data_hora_contato]
+        var _primeiroWhatsAppAposCallCenter =
+            CALCULATE (
+                MIN ( fato_jornada[data_hora_contato] ),
+                ALL ( fato_jornada ),
+                fato_jornada[aluno_hash] = _alunoHash,
+                fato_jornada[canal] = "whatsapp",
+                fato_jornada[data_hora_contato] > _dataHoraCallCenter
+            )
+
+return
+            NOT ISBLANK ( _primeiroWhatsAppAposCallCenter )
+                && DATEDIFF ( _dataHoraCallCenter, _primeiroWhatsAppAposCallCenter, SECOND ) <= 604800
+    )
+return
+    COUNTROWS ( _contatosSeguidosAte7Dias )
+
+-- Display Folder: 05. Jornada e recontato (Q1, Q2, Q9) | Format String: #,0
+#11_Q2_Alunos_Trinca_CC_WA_Outro_Canal = 
+
+var _alunosTrinca =
+    CALCULATETABLE (
+        VALUES ( fato_jornada[aluno_hash] ),
+        fato_jornada[canal_anterior] = "call_center",
+        fato_jornada[canal] = "whatsapp",
+        NOT ISBLANK ( fato_jornada[canal_proximo] ),
+        fato_jornada[canal_proximo] <> "whatsapp"
+    )
+
+return
+    COUNTROWS ( _alunosTrinca )
+
+-- Display Folder: 05. Jornada e recontato (Q1, Q2, Q9) | Format String: #,0
+#12_Q2_Trincas_CC_WA_Outro_Canal = 
+
+CALCULATE (
+    COUNTROWS ( fato_jornada ),
+    fato_jornada[canal_anterior] = "call_center",
+    fato_jornada[canal] = "whatsapp",
+    NOT ISBLANK ( fato_jornada[canal_proximo] ),
+    fato_jornada[canal_proximo] <> "whatsapp"
+)
+
+-- Display Folder: 05. Jornada e recontato (Q1, Q2, Q9) | Format String: #,0
+#13_Q2_Alunos_Trinca_CC_WA_Video_Totem = 
+
+var _alunosTrincaVideoTotem =
+    CALCULATETABLE (
+        VALUES ( fato_jornada[aluno_hash] ),
+        fato_jornada[canal_anterior] = "call_center",
+        fato_jornada[canal] = "whatsapp",
+        fato_jornada[canal_proximo] IN { "video_chamada", "totem" }
+    )
+
+return
+    COUNTROWS ( _alunosTrincaVideoTotem )
+
+-- Display Folder: 05. Jornada e recontato (Q1, Q2, Q9) | Format String: #,0
+#14_Q2_Trincas_CC_WA_Video_Totem = 
+
+CALCULATE (
+    COUNTROWS ( fato_jornada ),
+    fato_jornada[canal_anterior] = "call_center",
+    fato_jornada[canal] = "whatsapp",
+    fato_jornada[canal_proximo] IN { "video_chamada", "totem" }
+)
+
+-- Display Folder: 05. Jornada e recontato (Q1, Q2, Q9) | Format String: #,0
+#15_Q2_Alunos_Trinca_CC_WA_Qualquer_Canal = 
+
+var _alunosTrincaQualquerCanal =
+    CALCULATETABLE (
+        VALUES ( fato_jornada[aluno_hash] ),
+        fato_jornada[canal_anterior] = "call_center",
+        fato_jornada[canal] = "whatsapp",
+        NOT ISBLANK ( fato_jornada[canal_proximo] )
+    )
+
+return
+    COUNTROWS ( _alunosTrincaQualquerCanal )
+
+-- Display Folder: 05. Jornada e recontato (Q1, Q2, Q9) | Format String: #,0
+#16_Q2_Trincas_CC_WA_Qualquer_Canal = 
+
+CALCULATE (
+    COUNTROWS ( fato_jornada ),
+    fato_jornada[canal_anterior] = "call_center",
+    fato_jornada[canal] = "whatsapp",
+    NOT ISBLANK ( fato_jornada[canal_proximo] )
+)
+
+-- Display Folder: 05. Jornada e recontato (Q1, Q2, Q9) | Format String: #,0
+#17_Q2_Alunos_Sequencia_Intermediarios_CC_WA_Outro_Canal = 
+
+var _alunosBase = VALUES ( dim_aluno[aluno_hash] )
+var _alunosQualificados =
+    FILTER (
+        _alunosBase,
+        var _alunoHash = dim_aluno[aluno_hash]
+        var _primeiroContatoCallCenter =
+            CALCULATE (
+                MIN ( fato_jornada[data_hora_contato] ),
+                ALL ( fato_jornada ),
+                fato_jornada[aluno_hash] = _alunoHash,
+                fato_jornada[canal] = "call_center"
+            )
+        var _primeiroWhatsAppAposCallCenter =
+            IF (
+                NOT ISBLANK ( _primeiroContatoCallCenter ),
+                CALCULATE (
+                    MIN ( fato_jornada[data_hora_contato] ),
+                    ALL ( fato_jornada ),
+                    fato_jornada[aluno_hash] = _alunoHash,
+                    fato_jornada[canal] = "whatsapp",
+                    fato_jornada[data_hora_contato] > _primeiroContatoCallCenter
+                )
+            )
+        var _contatosCanalPosterior =
+            IF (
+                NOT ISBLANK ( _primeiroWhatsAppAposCallCenter ),
+                CALCULATE (
+                    COUNTROWS ( fato_jornada ),
+                    ALL ( fato_jornada ),
+                    fato_jornada[aluno_hash] = _alunoHash,
+                    fato_jornada[canal] <> "whatsapp",
+                    fato_jornada[data_hora_contato] > _primeiroWhatsAppAposCallCenter
+                ),
+                0
+            )
+
+return
+            _contatosCanalPosterior > 0
+    )
+return
+    COUNTROWS ( _alunosQualificados )
+
+-- Display Folder: 05. Jornada e recontato (Q1, Q2, Q9) | Format String: #,0
+#18_Q2_Alunos_Sequencia_Intermediarios_CC_WA_Video_Totem = 
+
+var _alunosBase = VALUES ( dim_aluno[aluno_hash] )
+var _alunosQualificados =
+    FILTER (
+        _alunosBase,
+        var _alunoHash = dim_aluno[aluno_hash]
+        var _primeiroContatoCallCenter =
+            CALCULATE (
+                MIN ( fato_jornada[data_hora_contato] ),
+                ALL ( fato_jornada ),
+                fato_jornada[aluno_hash] = _alunoHash,
+                fato_jornada[canal] = "call_center"
+            )
+        var _primeiroWhatsAppAposCallCenter =
+            IF (
+                NOT ISBLANK ( _primeiroContatoCallCenter ),
+                CALCULATE (
+                    MIN ( fato_jornada[data_hora_contato] ),
+                    ALL ( fato_jornada ),
+                    fato_jornada[aluno_hash] = _alunoHash,
+                    fato_jornada[canal] = "whatsapp",
+                    fato_jornada[data_hora_contato] > _primeiroContatoCallCenter
+                )
+            )
+        var _contatosCanalPosterior =
+            IF (
+                NOT ISBLANK ( _primeiroWhatsAppAposCallCenter ),
+                CALCULATE (
+                    COUNTROWS ( fato_jornada ),
+                    ALL ( fato_jornada ),
+                    fato_jornada[aluno_hash] = _alunoHash,
+                    fato_jornada[canal] IN { "video_chamada", "totem" },
+                    fato_jornada[data_hora_contato] > _primeiroWhatsAppAposCallCenter
+                ),
+                0
+            )
+
+return
+            _contatosCanalPosterior > 0
+    )
+return
+    COUNTROWS ( _alunosQualificados )
+
+-- Display Folder: 05. Jornada e recontato (Q1, Q2, Q9) | Format String: 0.00%
+#19_Q9_Atendimentos_Agente_Humano = 
+
+CALCULATE (
+    [#01_Total_Contatos],
+    dim_agente[eh_agente_humano] = TRUE ()
+)
+
+-- Display Folder: 05. Jornada e recontato (Q1, Q2, Q9) | Format String: #,0
+#20_Q9_Recontatos_Mesmo_Dia_Omnichannel = 
+
+CALCULATE (
+    COUNTROWS ( fato_jornada ),
+    fato_jornada[flag_recontato_mesmo_dia_canal_com_agente] = TRUE (),
+    dim_agente[eh_agente_humano] = TRUE (),
+    USERELATIONSHIP ( fato_jornada[agente_id_atribuido_recontato], dim_agente[agente_id] )
+)
+
+-- Display Folder: 05. Jornada e recontato (Q1, Q2, Q9) | Format String: 0.00%
+#21_Q9_Taxa_Recontato_Mesmo_Dia_Omnichannel = 
+
+var _totalRecontatos = [#20_Q9_Recontatos_Mesmo_Dia_Omnichannel]
+var _totalAtendimentosAgente = [#19_Q9_Atendimentos_Agente_Humano]
+
+return
+    DIVIDE ( _totalRecontatos, _totalAtendimentosAgente, BLANK () )
+
+-- Display Folder: 05. Jornada e recontato (Q1, Q2, Q9) | Format String: #,0
+#22_Q9_Recontatos_Mesmo_Dia_Intracanal = 
+
+CALCULATE (
+    COUNTROWS ( fato_jornada ),
+    fato_jornada[flag_recontato_intracanal_mesmo_dia] = TRUE (),
+    dim_agente[eh_agente_humano] = TRUE (),
+    USERELATIONSHIP ( fato_jornada[agente_id_atribuido_recontato_intracanal], dim_agente[agente_id] )
+)
+
+-- Display Folder: 05. Jornada e recontato (Q1, Q2, Q9) | Format String: #,0
+#23_Q9_Taxa_Recontato_Mesmo_Dia_Intracanal = 
+
+var _totalRecontatos = [#22_Q9_Recontatos_Mesmo_Dia_Intracanal]
+var _totalAtendimentosAgente = [#19_Q9_Atendimentos_Agente_Humano]
+
+return
+    DIVIDE ( _totalRecontatos, _totalAtendimentosAgente, BLANK () )
+
+-- Display Folder: 05. Jornada e recontato (Q1, Q2, Q9) | Format String: #,0
+#24_Contatos_Sobreposicao_Intracanal = 
+
+CALCULATE (
+    COUNTROWS ( fato_jornada ),
+    fato_jornada[flag_sobreposicao_estimada] = "intracanal"
+)
+
+-- Display Folder: 05. Jornada e recontato (Q1, Q2, Q9) | Format String: #,0
+#25_Contatos_Sobreposicao_Intercanal = 
+
+CALCULATE (
+    COUNTROWS ( fato_jornada ),
+    fato_jornada[flag_sobreposicao_estimada] = "intercanal"
+)
+
+-- Display Folder: 05. Jornada e recontato (Q1, Q2, Q9) | Format String: #,0
+#26_Total_Sobreposicoes_Horario = 
+
+[#24_Contatos_Sobreposicao_Intracanal] + [#25_Contatos_Sobreposicao_Intercanal]
+

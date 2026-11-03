@@ -1,0 +1,89 @@
+-- Display Folder: 02. Satisfação e pesquisa | Format String: #,0
+#01_Contatos_Pesquisa_Respondida = 
+
+CALCULATE (
+    [#01_Total_Contatos],
+    fato_contato[respondeu_pesquisa] = TRUE ()
+)
+
+-- Display Folder: 02. Satisfação e pesquisa | Format String: 0.00
+#02_Taxa_Resposta_Pesquisa = 
+
+var _contatosRespondidos = [#01_Contatos_Pesquisa_Respondida]
+var _totalContatos = [#01_Total_Contatos]
+
+return
+    DIVIDE ( _contatosRespondidos, _totalContatos, BLANK () )
+
+-- Display Folder: 02. Satisfação e pesquisa | Format String: #,0
+#03_Soma_Notas_Validas = 
+
+SUM ( fato_contato[nota] )
+
+-- Display Folder: 02. Satisfação e pesquisa | Format String: 0.00%
+#04_Nota_Media_Satisfacao = 
+
+var _somaNotas = [#03_Soma_Notas_Validas]
+var _contatosRespondidos = [#01_Contatos_Pesquisa_Respondida]
+
+return
+    DIVIDE ( _somaNotas, _contatosRespondidos, BLANK () )
+
+-- Display Folder: 02. Satisfação e pesquisa | Format String: #,0
+#05_Contatos_Nota_Ruim = 
+
+CALCULATE (
+    [#01_Total_Contatos],
+    fato_contato[flag_nota_ruim] = TRUE ()
+)
+
+-- Display Folder: 02. Satisfação e pesquisa | Format String: #,0
+#06_%_Notas_Ruins = 
+
+var _contatosRuins = [#05_Contatos_Nota_Ruim]
+var _contatosRespondidos = [#01_Contatos_Pesquisa_Respondida]
+
+return
+    DIVIDE ( _contatosRuins, _contatosRespondidos, BLANK () )
+
+-- Display Folder: 02. Satisfação e pesquisa | Format String: #,0
+#07_Contatos_Sem_Resposta_Zero = 
+
+CALCULATE (
+    [#01_Total_Contatos],
+    fato_contato[status_nota] = "sem_resposta_zero"
+)
+
+-- Display Folder: 02. Satisfação e pesquisa | Format String: @
+#08_Contatos_Sem_Resposta_Nula = 
+
+CALCULATE (
+    [#01_Total_Contatos],
+    fato_contato[status_nota] = "sem_resposta_nula"
+)
+
+-- Display Folder: 02. Satisfação e pesquisa | Format String: @
+#09_Flag_Cobertura_Amostral_Minima = 
+
+var _contatosRespondidos = [#01_Contatos_Pesquisa_Respondida]
+
+return
+    IF ( _contatosRespondidos >= 30, 1, 0 )
+
+-- Display Folder: 02. Satisfação e pesquisa | Format String: @
+#10_Guardrail_Cobertura_Amostral = 
+
+var _contatosRespondidos = [#01_Contatos_Pesquisa_Respondida]
+var _taxaResposta = [#02_Taxa_Resposta_Pesquisa]
+
+return
+    IF (
+        ISBLANK ( _contatosRespondidos ) || _contatosRespondidos = 0,
+        "Sem respostas válidas no recorte",
+        IF (
+            _contatosRespondidos < 30,
+            "Atenção: baixa cobertura amostral (n = " & FORMAT ( _contatosRespondidos, "#,0" ) & " | " & FORMAT ( _taxaResposta, "0.00%" ) & ")",
+            "Amostra adequada (n = " & FORMAT ( _contatosRespondidos, "#,0" ) & " | " & FORMAT ( _taxaResposta, "0.00%" ) & ")"
+        )
+    )
+

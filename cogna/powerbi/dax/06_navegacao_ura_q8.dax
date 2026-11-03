@@ -1,0 +1,78 @@
+-- Display Folder: 06. Navegação URA (Q8) | Format String: 0.00%
+#01_Q8_Contatos_Distintos_Ponto_Navegacao = 
+
+CALCULATE (
+    DISTINCTCOUNT ( fato_navegacao[contato_id] ),
+    fato_navegacao[tipo_sequencia] = "original"
+)
+
+-- Display Folder: 06. Navegação URA (Q8) | Format String: 0.00
+#02_Q8_Contatos_Pesquisa_Respondida_Ponto_Navegacao = 
+
+var _contatosNoNavegacao =
+    CALCULATETABLE (
+        VALUES ( fato_navegacao[contato_id] ),
+        fato_navegacao[tipo_sequencia] = "original"
+    )
+
+return
+    CALCULATE (
+        [#01_Contatos_Pesquisa_Respondida],
+        TREATAS ( _contatosNoNavegacao, fato_contato[contato_id] )
+    )
+
+-- Display Folder: 06. Navegação URA (Q8) | Format String: #,0
+#03_Q8_Taxa_Resposta_Ponto_Navegacao = 
+
+var _respondidos = [#02_Q8_Contatos_Pesquisa_Respondida_Ponto_Navegacao]
+var _contatosNoPonto = [#01_Q8_Contatos_Distintos_Ponto_Navegacao]
+
+return
+    DIVIDE ( _respondidos, _contatosNoPonto, BLANK () )
+
+-- Display Folder: 06. Navegação URA (Q8) | Format String: 0.00%
+#04_Q8_Nota_Media_Ponto_Navegacao = 
+
+var _contatosNoNavegacao =
+    CALCULATETABLE (
+        VALUES ( fato_navegacao[contato_id] ),
+        fato_navegacao[tipo_sequencia] = "original"
+    )
+var _somaNotas =
+    CALCULATE (
+        [#03_Soma_Notas_Validas],
+        TREATAS ( _contatosNoNavegacao, fato_contato[contato_id] )
+    )
+var _respondidos =
+    CALCULATE (
+        [#01_Contatos_Pesquisa_Respondida],
+        TREATAS ( _contatosNoNavegacao, fato_contato[contato_id] )
+    )
+
+return
+    DIVIDE ( _somaNotas, _respondidos, BLANK () )
+
+-- Display Folder: 06. Navegação URA (Q8) | Format String: 0.00%
+#05_Q8_Contatos_Nota_Ruim_Ponto_Navegacao = 
+
+var _contatosNoNavegacao =
+    CALCULATETABLE (
+        VALUES ( fato_navegacao[contato_id] ),
+        fato_navegacao[tipo_sequencia] = "original"
+    )
+
+return
+    CALCULATE (
+        [#05_Contatos_Nota_Ruim],
+        TREATAS ( _contatosNoNavegacao, fato_contato[contato_id] )
+    )
+
+-- Display Folder: 06. Navegação URA (Q8) | Format String: 0.00%
+#06_Q8_%_Notas_Ruins_Ponto_Navegacao = 
+
+var _ruins = [#05_Q8_Contatos_Nota_Ruim_Ponto_Navegacao]
+var _respondidos = [#02_Q8_Contatos_Pesquisa_Respondida_Ponto_Navegacao]
+
+return
+    DIVIDE ( _ruins, _respondidos, BLANK () )
+

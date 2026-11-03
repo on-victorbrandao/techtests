@@ -1,0 +1,78 @@
+-- Display Folder: 03. Tempo operacional | Format String: #,0.00
+#01_Duracao_Media_s = 
+
+AVERAGE ( fato_contato[duracao_s] )
+
+-- Display Folder: 03. Tempo operacional | Format String: #,0.00
+#02_Duracao_Mediana_s = 
+
+MEDIAN ( fato_contato[duracao_s] )
+
+-- Display Folder: 03. Tempo operacional | Format String: #,0
+#03_TME_Medio_s = 
+
+AVERAGE ( fato_contato[tme_s] )
+
+-- Display Folder: 03. Tempo operacional | Format String: #,0
+#04_TME_Mediano_s = 
+
+MEDIAN ( fato_contato[tme_s] )
+
+-- Display Folder: 03. Tempo operacional | Format String: 0.00%
+#05_Contatos_TME_Preenchido = 
+
+CALCULATE (
+    [#01_Total_Contatos],
+    NOT ISBLANK ( fato_contato[tme_s] )
+)
+
+-- Display Folder: 03. Tempo operacional | Format String: #,0
+#06_Contatos_TME_Maior_Duracao = 
+
+CALCULATE (
+    [#01_Total_Contatos],
+    fato_contato[flag_tme_maior_duracao] = TRUE ()
+)
+
+-- Display Folder: 03. Tempo operacional | Format String: 0.00%
+#07_%_Contatos_TME_Maior_Duracao = 
+
+var _tmeMaiorQueDuracao = [#06_Contatos_TME_Maior_Duracao]
+var _contatosComTme = [#05_Contatos_TME_Preenchido]
+
+return
+    DIVIDE ( _tmeMaiorQueDuracao, _contatosComTme, BLANK () )
+
+-- Display Folder: 03. Tempo operacional | Format String: #,0
+#08_Contatos_Duracao_Zero = 
+
+CALCULATE (
+    [#01_Total_Contatos],
+    fato_contato[flag_duracao_zero] = TRUE ()
+)
+
+-- Display Folder: 03. Tempo operacional | Format String: #,0
+#09_%_Contatos_Duracao_Zero = 
+
+var _contatosDuracaoZero = [#08_Contatos_Duracao_Zero]
+var _totalContatos = [#01_Total_Contatos]
+
+return
+    DIVIDE ( _contatosDuracaoZero, _totalContatos, BLANK () )
+
+-- Display Folder: 03. Tempo operacional | Format String: #,0
+#10_Contatos_Outlier_Duracao = 
+
+CALCULATE (
+    [#01_Total_Contatos],
+    fato_contato[flag_outlier_duracao] = TRUE ()
+)
+
+-- Display Folder: 03. Tempo operacional | Format String: #,0
+#11_Contatos_Outlier_TME = 
+
+CALCULATE (
+    [#01_Total_Contatos],
+    fato_contato[flag_outlier_tme] = TRUE ()
+)
+

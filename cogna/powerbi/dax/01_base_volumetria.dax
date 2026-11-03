@@ -1,0 +1,98 @@
+-- Display Folder: 01. Base e volumetria | Format String: #,0.00
+#01_Total_Contatos = 
+
+COUNTROWS ( fato_contato )
+
+-- Display Folder: 01. Base e volumetria | Format String: #,0
+#02_Alunos_Distintos = 
+
+DISTINCTCOUNT ( fato_contato[aluno_hash] )
+
+-- Display Folder: 01. Base e volumetria | Format String: #,0
+#03_Media_Contatos_Por_Aluno = 
+
+var _totalContatos = [#01_Total_Contatos]
+var _totalAlunos = [#02_Alunos_Distintos]
+
+return
+    DIVIDE ( _totalContatos, _totalAlunos, BLANK () )
+
+-- Display Folder: 01. Base e volumetria | Format String: #,0
+#04_Contatos_Call_Center = 
+
+CALCULATE (
+    [#01_Total_Contatos],
+    dim_canal[canal] = "call_center"
+)
+
+-- Display Folder: 01. Base e volumetria | Format String: #,0
+#05_Contatos_WhatsApp = 
+
+CALCULATE (
+    [#01_Total_Contatos],
+    dim_canal[canal] = "whatsapp"
+)
+
+-- Display Folder: 01. Base e volumetria | Format String: 0.00%
+#06_Contatos_Video_Chamada = 
+
+CALCULATE (
+    [#01_Total_Contatos],
+    dim_canal[canal] = "video_chamada"
+)
+
+-- Display Folder: 01. Base e volumetria | Format String: #,0
+#07_Contatos_Totem = 
+
+CALCULATE (
+    [#01_Total_Contatos],
+    dim_canal[canal] = "totem"
+)
+
+-- Display Folder: 01. Base e volumetria | Format String: 0.00%
+#08_%_Participacao_Canal = 
+
+var _contatosContexto = [#01_Total_Contatos]
+var _contatosGlobal =
+    CALCULATE (
+        [#01_Total_Contatos],
+        ALL ( dim_canal )
+    )
+
+return
+    DIVIDE ( _contatosContexto, _contatosGlobal, BLANK () )
+
+-- Display Folder: 01. Base e volumetria | Format String: #,0
+#09_Contatos_Motivo_Preenchido = 
+
+CALCULATE (
+    [#01_Total_Contatos],
+    dim_motivo[motivo_principal] <> "Sem Tabulação (Nulo)"
+)
+
+-- Display Folder: 01. Base e volumetria | Format String: 0.00%
+#10_%_Preenchimento_Motivo = 
+
+var _contatosPreenchidos = [#09_Contatos_Motivo_Preenchido]
+var _totalContatos = [#01_Total_Contatos]
+
+return
+    DIVIDE ( _contatosPreenchidos, _totalContatos, BLANK () )
+
+-- Display Folder: 01. Base e volumetria | Format String: 0.00%
+#11_Contatos_Motivo_Identificado = 
+
+CALCULATE (
+    [#01_Total_Contatos],
+    NOT dim_motivo[motivo_principal] IN { "Sem Tabulação (Nulo)", "Nao identificado" }
+)
+
+-- Display Folder: 01. Base e volumetria | Format String: 0.00%
+#12_%_Motivo_Identificado = 
+
+var _contatosIdentificados = [#11_Contatos_Motivo_Identificado]
+var _totalContatos = [#01_Total_Contatos]
+
+return
+    DIVIDE ( _contatosIdentificados, _totalContatos, BLANK () )
+

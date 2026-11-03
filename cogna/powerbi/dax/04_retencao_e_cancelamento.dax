@@ -1,0 +1,277 @@
+-- Display Folder: 04. Retenção e cancelamento | Format String: #,0
+#01_Contatos_Fila_Retencao = 
+
+CALCULATE (
+    [#01_Total_Contatos],
+    fato_contato[eh_retencao_fila] = TRUE ()
+)
+
+-- Display Folder: 04. Retenção e cancelamento | Format String: #,0
+#02_Contatos_Fila_CRA_Retencao = 
+
+CALCULATE (
+    [#01_Total_Contatos],
+    fato_contato[fila_atend] = "cra_retencao"
+)
+
+-- Display Folder: 04. Retenção e cancelamento | Format String: #,0
+#03_Contatos_Assunto_Retencao = 
+
+CALCULATE (
+    [#01_Total_Contatos],
+    fato_contato[eh_assunto_retencao] = TRUE ()
+)
+
+-- Display Folder: 04. Retenção e cancelamento | Format String: #,0
+#04_Contatos_Assunto_Retencao_CC = 
+
+CALCULATE (
+    [#01_Total_Contatos],
+    fato_contato[canal] = "call_center",
+    fato_contato[eh_assunto_retencao] = TRUE ()
+)
+
+-- Display Folder: 04. Retenção e cancelamento | Format String: #,0
+#05_Alunos_Distintos_Fila_CRA_Retencao = 
+
+CALCULATE (
+    [#02_Alunos_Distintos],
+    fato_contato[fila_atend] = "cra_retencao"
+)
+
+-- Display Folder: 04. Retenção e cancelamento | Format String: #,0
+#06_Alunos_Distintos_Filas_Retencao = 
+
+CALCULATE (
+    [#02_Alunos_Distintos],
+    fato_contato[eh_retencao_fila] = TRUE ()
+)
+
+-- Display Folder: 04. Retenção e cancelamento | Format String: #,0
+#07_Alunos_Distintos_Assunto_Retencao_CC = 
+
+CALCULATE (
+    [#02_Alunos_Distintos],
+    fato_contato[canal] = "call_center",
+    fato_contato[eh_assunto_retencao] = TRUE ()
+)
+
+-- Display Folder: 04. Retenção e cancelamento | Format String: 0.00%
+#08_Alunos_Distintos_Assunto_Retencao = 
+
+CALCULATE (
+    [#02_Alunos_Distintos],
+    fato_contato[eh_assunto_retencao] = TRUE ()
+)
+
+-- Display Folder: 04. Retenção e cancelamento | Format String: #,0
+#09_Pedidos_Cancelamento = 
+
+CALCULATE (
+    [#01_Total_Contatos],
+    fato_contato[desfecho_retencao] = "pedido_cancelamento"
+)
+
+-- Display Folder: 04. Retenção e cancelamento | Format String: 0.00%
+#10_%_Pedidos_Cancelamento_Retencao = 
+
+var _totalCancelamentos = [#09_Pedidos_Cancelamento]
+var _baseRetencao = [#03_Contatos_Assunto_Retencao]
+
+return
+    DIVIDE ( _totalCancelamentos, _baseRetencao, BLANK () )
+
+-- Display Folder: 04. Retenção e cancelamento | Format String: #,0
+#11_Alunos_Mantidos_Retencao = 
+
+CALCULATE (
+    [#01_Total_Contatos],
+    fato_contato[desfecho_retencao] = "aluno_mantido"
+)
+
+-- Display Folder: 04. Retenção e cancelamento | Format String: 0.00%
+#12_%_Alunos_Mantidos_Retencao = 
+
+var _totalMantidos = [#11_Alunos_Mantidos_Retencao]
+var _baseRetencao = [#03_Contatos_Assunto_Retencao]
+
+return
+    DIVIDE ( _totalMantidos, _baseRetencao, BLANK () )
+
+-- Display Folder: 04. Retenção e cancelamento | Format String: #,0
+#13_Pedidos_Transferencia = 
+
+CALCULATE (
+    [#01_Total_Contatos],
+    fato_contato[desfecho_retencao] = "pedido_transferencia"
+)
+
+-- Display Folder: 04. Retenção e cancelamento | Format String: 0.00%
+#14_%_Pedidos_Transferencia_Retencao = 
+
+var _totalTransferencias = [#13_Pedidos_Transferencia]
+var _baseRetencao = [#03_Contatos_Assunto_Retencao]
+
+return
+    DIVIDE ( _totalTransferencias, _baseRetencao, BLANK () )
+
+-- Display Folder: 04. Retenção e cancelamento | Format String: #,0
+#15_Pedidos_Trancamento = 
+
+CALCULATE (
+    [#01_Total_Contatos],
+    fato_contato[desfecho_retencao] = "pedido_trancamento"
+)
+
+-- Display Folder: 04. Retenção e cancelamento | Format String: 0.00%
+#16_%_Pedidos_Trancamento_Retencao = 
+
+var _totalTrancamentos = [#15_Pedidos_Trancamento]
+var _baseRetencao = [#03_Contatos_Assunto_Retencao]
+
+return
+    DIVIDE ( _totalTrancamentos, _baseRetencao, BLANK () )
+
+-- Display Folder: 04. Retenção e cancelamento | Format String: #,0
+#17_Pedidos_Cancelamento_CC_Com_Outro_Canal_Anterior = 
+
+var _eventosCancelamentoCallCenter =
+    CALCULATETABLE (
+        SUMMARIZE (
+            fato_contato,
+            fato_contato[contato_id],
+            fato_contato[aluno_hash],
+            fato_contato[data_hora_contato]
+        ),
+        fato_contato[canal] = "call_center",
+        fato_contato[desfecho_retencao] = "pedido_cancelamento"
+    )
+var _eventosComOutroCanalAnterior =
+    FILTER (
+        _eventosCancelamentoCallCenter,
+        var _alunoHash = fato_contato[aluno_hash]
+        var _dataHoraContato = fato_contato[data_hora_contato]
+
+return
+            CALCULATE (
+                COUNTROWS ( fato_contato ),
+                ALL ( fato_contato ),
+                fato_contato[aluno_hash] = _alunoHash,
+                fato_contato[data_hora_contato] < _dataHoraContato,
+                fato_contato[canal] <> "call_center"
+            ) > 0
+    )
+return
+    COUNTROWS ( _eventosComOutroCanalAnterior )
+
+-- Display Folder: 04. Retenção e cancelamento | Format String: 0.00%
+#18_%_Pedidos_Cancelamento_CC_Com_Outro_Canal_Anterior = 
+
+var _cancelamentosComOutroCanal = [#17_Pedidos_Cancelamento_CC_Com_Outro_Canal_Anterior]
+var _totalCancelamentosCallCenter =
+    CALCULATE (
+        [#09_Pedidos_Cancelamento],
+        fato_contato[canal] = "call_center"
+    )
+
+return
+    DIVIDE ( _cancelamentosComOutroCanal, _totalCancelamentosCallCenter, BLANK () )
+
+-- Display Folder: 04. Retenção e cancelamento | Format String: #,0.00
+#19_Contatos_Fila_Retencao_Com_Outro_Canal_Anterior = 
+
+var _eventosFilaRetencao =
+    CALCULATETABLE (
+        SUMMARIZE (
+            fato_contato,
+            fato_contato[contato_id],
+            fato_contato[aluno_hash],
+            fato_contato[data_hora_contato]
+        ),
+        fato_contato[canal] = "call_center",
+        fato_contato[eh_retencao_fila] = TRUE ()
+    )
+var _eventosComOutroCanalAnterior =
+    FILTER (
+        _eventosFilaRetencao,
+        var _alunoHash = fato_contato[aluno_hash]
+        var _dataHoraContato = fato_contato[data_hora_contato]
+
+return
+            CALCULATE (
+                COUNTROWS ( fato_contato ),
+                ALL ( fato_contato ),
+                fato_contato[aluno_hash] = _alunoHash,
+                fato_contato[data_hora_contato] < _dataHoraContato,
+                fato_contato[canal] <> "call_center"
+            ) > 0
+    )
+return
+    COUNTROWS ( _eventosComOutroCanalAnterior )
+
+-- Display Folder: 04. Retenção e cancelamento | Format String: #,0.00
+#20_%_Fila_Retencao_Com_Outro_Canal_Anterior = 
+
+var _filaComOutroCanal = [#19_Contatos_Fila_Retencao_Com_Outro_Canal_Anterior]
+var _totalFilaRetencao = [#01_Contatos_Fila_Retencao]
+
+return
+    DIVIDE ( _filaComOutroCanal, _totalFilaRetencao, BLANK () )
+
+-- Display Folder: 04. Retenção e cancelamento | Format String: #,0.00
+#21_Media_Contatos_Previos_Fila_Retencao = 
+
+var _eventosComHistoricoPrevio =
+    FILTER (
+        CALCULATETABLE (
+            fato_jornada,
+            fato_contato[canal] = "call_center",
+            fato_contato[eh_retencao_fila] = TRUE ()
+        ),
+        fato_jornada[ordem_contato_aluno] > 1
+    )
+
+return
+    AVERAGEX (
+        _eventosComHistoricoPrevio,
+        fato_jornada[ordem_contato_aluno] - 1
+    )
+
+-- Display Folder: 04. Retenção e cancelamento | Format String: #,0.00
+#22_Mediana_Contatos_Previos_Fila_Retencao = 
+
+var _eventosComHistoricoPrevio =
+    FILTER (
+        CALCULATETABLE (
+            fato_jornada,
+            fato_contato[canal] = "call_center",
+            fato_contato[eh_retencao_fila] = TRUE ()
+        ),
+        fato_jornada[ordem_contato_aluno] > 1
+    )
+
+return
+    MEDIANX (
+        _eventosComHistoricoPrevio,
+        fato_jornada[ordem_contato_aluno] - 1
+    )
+
+-- Display Folder: 04. Retenção e cancelamento | Format String: #,0.00
+#23_Tempo_Mediano_Desde_Ultimo_Contato_Ate_Retencao_h = 
+
+var _eventosComIntervaloValido =
+    FILTER (
+        CALCULATETABLE (
+            fato_jornada,
+            fato_contato[canal] = "call_center",
+            fato_contato[eh_retencao_fila] = TRUE ()
+        ),
+        NOT ISBLANK ( fato_jornada[segundos_desde_anterior] )
+    )
+
+return
+    MEDIANX (
+        _eventosComIntervaloValido,
+        DIVIDE ( fato_jornada[segundos_desde_anterior], 3600.0, BLANK () )
+    )
+

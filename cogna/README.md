@@ -66,8 +66,11 @@ cogna/
 │   ├── mapeamento_colunas.md         # De-para de colunas e definições por canal
 │   ├── inconsistencias_dicionario.md # Diagnóstico dos dicionários de dados
 │   ├── qualidade_dados.md            # Profiling das bases, limpeza Silver e reconciliação
-│   └── modelagem_e_analises.md       # Modelo estrela Gold e respostas das perguntas Q1 a Q9
+│   ├── modelagem_e_analises.md       # Modelo estrela Gold e respostas das perguntas Q1 a Q9
+│   └── camada_semantica_powerbi.md   # Integração M enxuta, relacionamentos e catálogo DAX
 ├── powerbi/                  # Artefatos de integração M, DAX e tema visual
+│   ├── m/                    # Scripts Power Query (.pq) parametrizados por pDataPath
+│   └── dax/                  # Catálogo de 88 medidas DAX organizadas por domínio
 ├── sql/                      # Scripts DuckDB SQL
 │   ├── staging/              # Macros, leitura do XLSX, domínios e camada Silver
 │   ├── model/                # Dimensões e tabelas fato do modelo estrela Gold
@@ -88,7 +91,8 @@ cogna/
     ├── test_fase1.py
     ├── test_fase2.py
     ├── test_fase3.py
-    └── test_fase4.py
+    ├── test_fase4.py
+    └── test_fase5.py
 ```
 
 ---
