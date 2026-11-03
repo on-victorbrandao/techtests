@@ -17,11 +17,21 @@
 !docs/qualidade_dados.md
 !docs/modelagem_e_analises.md
 !docs/camada_semantica_powerbi.md
+!docs/linhagem_dados.md
 !powerbi/
 !powerbi/**
 
+# Bloqueio estrito de arquivos internos de orquestracao e acompanhamento
+AGENTS.md
+docs/PLANO_MESTRE.md
+docs/ESTADO.md
+docs/decisoes.md
+docs/fase*.md
+
 # Nunca versionar dados, segredos, caches ou rascunhos locais
 powerbi/rules_*.md
+powerbi/ux/opcao*.svg
+powerbi/ux/*prototype*.svg
 data/
 entrega/
 .env
@@ -35,8 +45,7 @@ __pycache__/
 *.xlsx
 *.parquet
 *.duckdb
-*.pbix
-*.abf
-**/.pbi/
-**/cache.abi
+**/cache.abf
+**/.pbi/cache.abf
+**/.pbi/localSettings.json
 **/dictionaries/*.json
