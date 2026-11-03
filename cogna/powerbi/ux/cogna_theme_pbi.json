@@ -1,0 +1,78 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/powerbi-desktop-samples/refs/heads/main/Report%20Theme%20JSON%20Schema/reportThemeSchema-2.151.json",
+  "name": "Cogna Educação — Design System",
+  "dataColors": [
+    "#5219A1",
+    "#FFAD01",
+    "#7433DA",
+    "#0095FF",
+    "#0BB783",
+    "#8038F0",
+    "#F4AF16",
+    "#EF4444",
+    "#2D3135",
+    "#423950",
+    "#00E096",
+    "#C5A3F8"
+  ],
+  "background": "#FAFBFC",
+  "foreground": "#151D48",
+  "tableAccent": "#5219A1",
+  "textClasses": {
+    "callout": {
+      "fontFace": "Poppins, 'Segoe UI', Arial, sans-serif",
+      "fontSize": 24,
+      "color": "#151D48"
+    },
+    "title": {
+      "fontFace": "Poppins, 'Segoe UI', Arial, sans-serif",
+      "fontSize": 14,
+      "color": "#151D48"
+    },
+    "header": {
+      "fontFace": "Poppins, 'Segoe UI', Arial, sans-serif",
+      "fontSize": 11,
+      "color": "#2D3135"
+    },
+    "label": {
+      "fontFace": "Roboto, 'Segoe UI', Arial, sans-serif",
+      "fontSize": 10,
+      "color": "#737791"
+    }
+  },
+  "visualStyles": {
+    "*": {
+      "*": {
+        "background": [
+          {
+            "color": {
+              "solid": {
+                "color": "#FFFFFF"
+              }
+            },
+            "transparency": 0
+          }
+        ],
+        "border": [
+          {
+            "show": false
+          }
+        ]
+      }
+    },
+    "page": {
+      "*": {
+        "background": [
+          {
+            "color": {
+              "solid": {
+                "color": "#FAFBFC"
+              }
+            },
+            "transparency": 0
+          }
+        ]
+      }
+    }
+  }
+}
