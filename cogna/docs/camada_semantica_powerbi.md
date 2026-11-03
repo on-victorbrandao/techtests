@@ -330,3 +330,19 @@ A reconciliação demonstrou consistência plena entre as três fontes:
 3. **Catálogo e documentação técnica:** especificação formal documentada neste documento e em `docs/modelagem_e_analises.md`.
 
 Todas as divergências numéricas resultaram em zero para contagens inteiras e dentro da tolerância de `1e-4` para taxas percentuais e médias ponderadas.
+
+---
+
+## 6. Visual Único HTML Content (`#01_HTML_Dashboard_Executivo_Cogna`)
+
+Para a camada de visualização executiva (Fase 7), o modelo semântico disponibiliza a medida dedicada `#01_HTML_Dashboard_Executivo_Cogna` na pasta `07. Dashboard HTML Content`.
+
+- **Arquitetura:** O dashboard completo é renderizado dentro de um único visual "HTML Content" em tela cheia (full canvas).
+- **Componentes Embutidos:**
+  - Sidebar de navegação com logotipo oficial Cogna em vetor SVG e 6 abas de controle.
+  - Top bar com título institucional e perfil "Victor Brandão | Admin".
+  - Grid de 4 cartões de KPI (`Total de Contatos`, `Alunos Únicos`, `Nota Média CSAT` e `Taxa de Retenção`).
+  - Painéis analíticos modulares respondendo categoricamente às 9 perguntas de negócio (Q1 a Q9).
+- **Mecanismo de Interatividade:** Suporte dual com inputs de rádio CSS (`:checked`) para funcionamento garantido mesmo com JavaScript desabilitado, complementado por funções `<script>` para alternância fluida de abas.
+- **Reatividade:** Interpolação dinâmica de medidas do modelo semântico (`[#01_Total_Contatos]`, `[#02_Alunos_Distintos]`, `[#04_Nota_Media_Satisfacao]`, `[#12_%_Alunos_Mantidos_Retencao]`, entre outras).
+
