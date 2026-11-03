@@ -1,0 +1,60 @@
+table dim_hora
+	lineageTag: f3c2c000-f436-4198-8337-e69d0634bb04
+
+	column hora_inteira
+		dataType: int64
+		lineageTag: 3169ae39-daa0-4adb-8764-f2245e62a119
+		sourceColumn: hora_inteira
+
+	column hora_rotulo
+		dataType: string
+		lineageTag: 4c51f78e-c463-4645-8e09-6f5e3eea5b7c
+		sourceColumn: hora_rotulo
+		sortByColumn: hora_inteira
+
+	column faixa_horaria
+		dataType: string
+		lineageTag: d2ad8381-18a7-4b79-9991-64a21094b18d
+		sourceColumn: faixa_horaria
+		sortByColumn: hora_inteira
+
+	column turno
+		dataType: string
+		lineageTag: 0c6cf7fe-6122-49a9-b9b7-29d012245ea1
+		sourceColumn: turno
+		sortByColumn: turno_ordem
+
+	column turno_ordem
+		dataType: int64
+		lineageTag: cd40c975-2de9-424a-a6c2-6ce186635d3d
+		sourceColumn: turno_ordem
+
+	column horario_comercial_padrao
+		dataType: boolean
+		lineageTag: f25434b0-956a-4c19-be4d-75eddbd00e32
+		sourceColumn: horario_comercial_padrao
+
+	partition dim_hora = m
+		mode: import
+		source =
+				let
+				    fonte = Parquet.Document(File.Contents(pDataPath & "\dim_hora.parquet")),
+				
+				    tiposDefinidos = Table.TransformColumnTypes(
+				        fonte,
+				        {
+				            {"hora_inteira", Int64.Type},
+				            {"hora_rotulo", type text},
+				            {"faixa_horaria", type text},
+				            {"turno", type text},
+				            {"turno_ordem", Int64.Type},
+				            {"horario_comercial_padrao", type logical}
+				        }
+				    )
+				in
+				    tiposDefinidos
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

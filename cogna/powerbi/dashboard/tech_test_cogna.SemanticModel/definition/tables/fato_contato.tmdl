@@ -1,0 +1,262 @@
+table fato_contato
+	lineageTag: eb4deeae-0efa-487c-b3c6-78579af1ddf1
+
+	column contato_id
+		dataType: string
+		lineageTag: ccff72ee-957a-4963-aa3c-3efac0012e55
+		sourceColumn: contato_id
+
+	column aluno_hash
+		dataType: string
+		lineageTag: bd426752-8e42-4524-bdcf-835a4a61e116
+		sourceColumn: aluno_hash
+
+	column canal_id
+		dataType: int64
+		isHidden
+		lineageTag: a088095e-87e9-49eb-b64e-b22569e1a750
+		sourceColumn: canal_id
+
+	column canal
+		dataType: string
+		lineageTag: 8f84320f-e61a-4f8a-bc4c-cee4d03c61d5
+		sourceColumn: canal
+
+	column data_contato
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: cca82878-b86f-4de1-b5fa-c9e68a10203f
+		summarizeBy: none
+		sourceColumn: data_contato
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column hora_inteira
+		dataType: int64
+		isHidden
+		lineageTag: d857aed3-d490-4a43-8171-94f670df2da2
+		sourceColumn: hora_inteira
+
+	column agente_id
+		dataType: string
+		isHidden
+		lineageTag: 5e004366-d51c-4da7-9e53-bc2f968cded4
+		sourceColumn: agente_id
+
+	column fila_id
+		dataType: string
+		isHidden
+		lineageTag: 254abce4-0faf-480f-b9d4-10e4a29dc365
+		sourceColumn: fila_id
+
+	column perfil_id
+		dataType: string
+		isHidden
+		lineageTag: 2b9d0805-0be5-4680-9012-4a4f33b2ac4d
+		sourceColumn: perfil_id
+
+	column motivo_id
+		dataType: string
+		isHidden
+		lineageTag: d2bb66df-f70c-4076-9f48-de158a3c704a
+		sourceColumn: motivo_id
+
+	column data_hora_contato
+		dataType: dateTime
+		lineageTag: d0723fbe-aa52-4f9e-81c9-469ffb6a1c06
+		sourceColumn: data_hora_contato
+
+	column duracao_s
+		dataType: int64
+		lineageTag: 10769a09-a295-4136-8063-f8afe142bec1
+		sourceColumn: duracao_s
+
+	column tme_s
+		dataType: int64
+		lineageTag: 8b45f76f-ad2d-42ad-9ad2-8414fb71562e
+		sourceColumn: tme_s
+
+	column nota
+		dataType: int64
+		lineageTag: 7a074cc1-3d1c-453c-89bb-177f7da070cd
+		sourceColumn: nota
+
+	column status_nota
+		dataType: string
+		lineageTag: d9ba0d63-81ed-40ba-8907-26608274d75c
+		sourceColumn: status_nota
+
+	column respondeu_pesquisa
+		dataType: boolean
+		lineageTag: 4164f6c2-7d46-40ca-b16c-c191f285fe5b
+		sourceColumn: respondeu_pesquisa
+
+	column flag_nota_ruim
+		dataType: boolean
+		lineageTag: 97c45fe1-ca65-4dba-8a0b-1885b29e528b
+		sourceColumn: flag_nota_ruim
+
+	column flag_duracao_zero
+		dataType: boolean
+		lineageTag: ef22298b-e7d6-4563-8779-c1731c9e70c9
+		sourceColumn: flag_duracao_zero
+
+	column flag_outlier_duracao
+		dataType: boolean
+		lineageTag: a25b7d26-9052-4a61-bc9f-75fbde1910bc
+		sourceColumn: flag_outlier_duracao
+
+	column flag_outlier_tme
+		dataType: boolean
+		lineageTag: 288339ea-f5f1-41eb-a276-d9d2aafe4a59
+		sourceColumn: flag_outlier_tme
+
+	column flag_tme_maior_duracao
+		dataType: boolean
+		lineageTag: 70000e9e-590b-4d32-897c-02554385d695
+		sourceColumn: flag_tme_maior_duracao
+
+	column recepcao_fila
+		dataType: string
+		lineageTag: 7b4de143-758c-49ca-9723-8e3740f73993
+		sourceColumn: recepcao_fila
+
+	column fila_atend
+		dataType: string
+		lineageTag: c4276481-6a8b-45a5-97e0-dd8db04c243e
+		sourceColumn: fila_atend
+
+	column flag_filas_divergentes
+		dataType: boolean
+		lineageTag: 60ef0157-67c2-45de-9aed-c7741ddce8a9
+		sourceColumn: flag_filas_divergentes
+
+	column eh_retencao_fila
+		dataType: boolean
+		lineageTag: ee8051c1-f6c6-474e-943e-3c82eed66918
+		sourceColumn: eh_retencao_fila
+
+	column eh_assunto_retencao
+		dataType: boolean
+		lineageTag: 8aefbcf5-2c7c-4dcc-84b1-f95ddc462caf
+		sourceColumn: eh_assunto_retencao
+
+	column flag_encaminhamento_retencao
+		dataType: boolean
+		lineageTag: 3549bae3-2968-4d33-af80-3a3f2b0a8546
+		sourceColumn: flag_encaminhamento_retencao
+
+	column flag_retencao_protocolo
+		dataType: boolean
+		lineageTag: fa6ae45b-6a80-4e34-b78e-a91b2bae9f4a
+		sourceColumn: flag_retencao_protocolo
+
+	column desfecho_retencao
+		dataType: string
+		lineageTag: f010752a-228d-4f52-8a53-227045d7bb8f
+		sourceColumn: desfecho_retencao
+
+	column formato_protocolo
+		dataType: string
+		lineageTag: 25846a7a-a879-41ce-8c09-f46ecbcc1860
+		sourceColumn: formato_protocolo
+
+	column protocolo_padrao_cs
+		dataType: boolean
+		lineageTag: ca0134a8-0aa1-4aad-a061-cb1c98cdbc84
+		sourceColumn: protocolo_padrao_cs
+
+	column qtd_niveis_tab
+		dataType: int64
+		lineageTag: e9c837f1-07a9-401f-984b-52904eedfd8a
+		sourceColumn: qtd_niveis_tab
+
+	column modalidade_tab
+		dataType: string
+		lineageTag: 475eee9f-e0ac-44f9-ac96-17a0acd1c9b2
+		sourceColumn: modalidade_tab
+
+	column flag_divergencia_modalidade
+		dataType: boolean
+		lineageTag: fbcbeae5-eb48-4a5b-a239-265318ffab26
+		sourceColumn: flag_divergencia_modalidade
+
+	column qtd_passos_original
+		dataType: int64
+		lineageTag: 9fa76b87-db0a-43a8-9595-14d2d95c0eec
+		sourceColumn: qtd_passos_original
+
+	column flag_dominio_inconsistente
+		dataType: boolean
+		lineageTag: 3e3c78a3-d96d-4115-9c95-78fa55ac221e
+		sourceColumn: flag_dominio_inconsistente
+
+	column origem_aba
+		dataType: string
+		lineageTag: b6ad85c1-7dda-49de-ba7e-2e3c3ea5dc75
+		sourceColumn: origem_aba
+
+	column origem_linha
+		dataType: int64
+		isHidden
+		lineageTag: e5aae3dd-2923-45dd-9c23-d82ec6efba61
+		sourceColumn: origem_linha
+
+	partition fato_contato = m
+		mode: import
+		source =
+				let
+				    fonte = Parquet.Document(File.Contents(pDataPath & "\fato_contato.parquet")),
+				
+				    tiposDefinidos = Table.TransformColumnTypes(
+				        fonte,
+				        {
+				            {"contato_id", type text},
+				            {"aluno_hash", type text},
+				            {"canal_id", Int64.Type},
+				            {"canal", type text},
+				            {"data_contato", type date},
+				            {"hora_inteira", Int64.Type},
+				            {"agente_id", type text},
+				            {"fila_id", type text},
+				            {"perfil_id", type text},
+				            {"motivo_id", type text},
+				            {"data_hora_contato", type datetime},
+				            {"duracao_s", Int64.Type},
+				            {"tme_s", Int64.Type},
+				            {"nota", Int64.Type},
+				            {"status_nota", type text},
+				            {"respondeu_pesquisa", type logical},
+				            {"flag_nota_ruim", type logical},
+				            {"flag_duracao_zero", type logical},
+				            {"flag_outlier_duracao", type logical},
+				            {"flag_outlier_tme", type logical},
+				            {"flag_tme_maior_duracao", type logical},
+				            {"recepcao_fila", type text},
+				            {"fila_atend", type text},
+				            {"flag_filas_divergentes", type logical},
+				            {"eh_retencao_fila", type logical},
+				            {"eh_assunto_retencao", type logical},
+				            {"flag_encaminhamento_retencao", type logical},
+				            {"flag_retencao_protocolo", type logical},
+				            {"desfecho_retencao", type text},
+				            {"formato_protocolo", type text},
+				            {"protocolo_padrao_cs", type logical},
+				            {"qtd_niveis_tab", Int64.Type},
+				            {"modalidade_tab", type text},
+				            {"flag_divergencia_modalidade", type logical},
+				            {"qtd_passos_original", Int64.Type},
+				            {"flag_dominio_inconsistente", type logical},
+				            {"origem_aba", type text},
+				            {"origem_linha", Int64.Type}
+				        }
+				    )
+				in
+				    tiposDefinidos
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

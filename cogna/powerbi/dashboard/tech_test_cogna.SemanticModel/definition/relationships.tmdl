@@ -1,0 +1,65 @@
+relationship rel_fato_contato_dim_calendario
+	fromColumn: fato_contato.data_contato
+	toColumn: dim_calendario.data
+
+relationship rel_fato_contato_dim_hora
+	fromColumn: fato_contato.hora_inteira
+	toColumn: dim_hora.hora_inteira
+
+relationship rel_fato_contato_dim_canal
+	fromColumn: fato_contato.canal_id
+	toColumn: dim_canal.canal_id
+
+relationship rel_fato_contato_dim_aluno
+	fromColumn: fato_contato.aluno_hash
+	toColumn: dim_aluno.aluno_hash
+
+relationship rel_fato_contato_dim_agente
+	fromColumn: fato_contato.agente_id
+	toColumn: dim_agente.agente_id
+
+relationship rel_fato_contato_dim_fila
+	fromColumn: fato_contato.fila_id
+	toColumn: dim_fila.fila_id
+
+relationship rel_fato_contato_dim_perfil_aluno
+	fromColumn: fato_contato.perfil_id
+	toColumn: dim_perfil_aluno.perfil_id
+
+relationship rel_fato_contato_dim_motivo
+	fromColumn: fato_contato.motivo_id
+	toColumn: dim_motivo.motivo_id
+
+relationship rel_fato_navegacao_fato_contato
+	fromColumn: fato_navegacao.contato_id
+	toColumn: fato_contato.contato_id
+
+relationship rel_fato_jornada_fato_contato
+	fromColumn: fato_jornada.contato_id
+	toColumn: fato_contato.contato_id
+
+relationship rel_fato_jornada_dim_agente_visao_a
+	isActive: false
+	fromColumn: fato_jornada.agente_id_atribuido_recontato
+	toColumn: dim_agente.agente_id
+
+relationship rel_fato_jornada_dim_agente_visao_b
+	isActive: false
+	fromColumn: fato_jornada.agente_id_atribuido_recontato_intracanal
+	toColumn: dim_agente.agente_id
+
+relationship rel_fato_navegacao_dim_aluno
+	isActive: false
+	fromColumn: fato_navegacao.aluno_hash
+	toColumn: dim_aluno.aluno_hash
+
+relationship rel_fato_jornada_dim_aluno
+	isActive: false
+	fromColumn: fato_jornada.aluno_hash
+	toColumn: dim_aluno.aluno_hash
+
+relationship rel_fato_jornada_dim_calendario
+	isActive: false
+	fromColumn: fato_jornada.data_contato
+	toColumn: dim_calendario.data
+

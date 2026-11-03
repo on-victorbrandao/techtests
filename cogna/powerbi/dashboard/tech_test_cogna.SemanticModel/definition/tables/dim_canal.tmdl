@@ -1,0 +1,83 @@
+table dim_canal
+	lineageTag: f15f33e5-bf9d-47cb-aa12-93307e83b00e
+
+	column canal_id
+		dataType: int64
+		lineageTag: 064259f2-7425-4a6b-b39d-1bb871689f77
+		sourceColumn: canal_id
+
+	column canal
+		dataType: string
+		lineageTag: 7fa0ea3f-ad4d-468d-a06b-041c7914124c
+		sourceColumn: canal
+		sortByColumn: canal_ordem
+
+	column canal_nome
+		dataType: string
+		lineageTag: 3a4b6ac8-2e98-4437-b58e-674674f837cd
+		sourceColumn: canal_nome
+		sortByColumn: canal_ordem
+
+	column tipo_atendimento
+		dataType: string
+		lineageTag: 68c0eaea-08da-419b-91d6-7b50178d27e5
+		sourceColumn: tipo_atendimento
+
+	column possui_agente_humano
+		dataType: boolean
+		lineageTag: c9b8f778-629d-4a53-85c9-9207b92eba99
+		sourceColumn: possui_agente_humano
+
+	column possui_fila
+		dataType: boolean
+		lineageTag: 0b758b96-cb66-4182-8eb8-1eb6d3e93831
+		sourceColumn: possui_fila
+
+	column possui_tme
+		dataType: boolean
+		lineageTag: b08dfb37-a441-488a-b8a4-dd7046e00b53
+		sourceColumn: possui_tme
+
+	column possui_perfil_completo
+		dataType: boolean
+		lineageTag: daf0aa2c-94b2-4b22-85f2-2cba2553d374
+		sourceColumn: possui_perfil_completo
+
+	column taxonomia_motivo
+		dataType: string
+		lineageTag: 96ad1113-039d-47d2-b9ed-205dd7887769
+		sourceColumn: taxonomia_motivo
+
+	column canal_ordem
+		dataType: int64
+		lineageTag: e748c556-6ed2-4eb3-8b60-471546914dcf
+		sourceColumn: canal_ordem
+
+	partition dim_canal = m
+		mode: import
+		source =
+				let
+				    fonte = Parquet.Document(File.Contents(pDataPath & "\dim_canal.parquet")),
+				
+				    tiposDefinidos = Table.TransformColumnTypes(
+				        fonte,
+				        {
+				            {"canal_id", Int64.Type},
+				            {"canal", type text},
+				            {"canal_nome", type text},
+				            {"tipo_atendimento", type text},
+				            {"possui_agente_humano", type logical},
+				            {"possui_fila", type logical},
+				            {"possui_tme", type logical},
+				            {"possui_perfil_completo", type logical},
+				            {"taxonomia_motivo", type text},
+				            {"canal_ordem", Int64.Type}
+				        }
+				    )
+				in
+				    tiposDefinidos
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

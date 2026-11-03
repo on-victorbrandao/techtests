@@ -1,0 +1,65 @@
+table fato_navegacao
+	lineageTag: 3da25fb5-b995-4d2e-88f4-8ba99b0fd014
+
+	column contato_id
+		dataType: string
+		lineageTag: 343c7a65-9a03-4762-ae88-111fca10b9da
+		sourceColumn: contato_id
+
+	column canal
+		dataType: string
+		lineageTag: 75e65058-fd49-40fb-89f0-d02582d451eb
+		sourceColumn: canal
+
+	column aluno_hash
+		dataType: string
+		lineageTag: c74321cd-43c2-4149-afea-f4c5ca9a4b47
+		sourceColumn: aluno_hash
+
+	column tipo_sequencia
+		dataType: string
+		lineageTag: 3d5bed2e-c7cd-4532-88f1-527ff62c3422
+		sourceColumn: tipo_sequencia
+
+	column ordem_passo
+		dataType: int64
+		lineageTag: d6df0a75-fb1f-4237-b9ef-426885435ccb
+		sourceColumn: ordem_passo
+
+	column ponto_navegacao
+		dataType: string
+		lineageTag: 15aef1b9-4038-4665-8111-eeeb2ec4f25c
+		sourceColumn: ponto_navegacao
+
+	column eh_token_98_99
+		dataType: boolean
+		lineageTag: 41014bc2-2524-4840-a6d0-0603ce3a2cce
+		sourceColumn: eh_token_98_99
+
+	column eh_repeticao_consecutiva
+		dataType: boolean
+		lineageTag: 2cf2d200-a9bf-42ff-9abd-c8be2cab7aaa
+		sourceColumn: eh_repeticao_consecutiva
+
+	partition fato_navegacao = m
+		mode: import
+		source =
+				let
+				    fonte = Parquet.Document(File.Contents(pDataPath & "\fato_navegacao.parquet")),
+				
+				    tiposDefinidos = Table.TransformColumnTypes(
+				        fonte,
+				        {
+				            {"contato_id", type text},
+				            {"canal", type text},
+				            {"aluno_hash", type text},
+				            {"tipo_sequencia", type text},
+				            {"ordem_passo", Int64.Type},
+				            {"ponto_navegacao", type text},
+				            {"eh_token_98_99", type logical},
+				            {"eh_repeticao_consecutiva", type logical}
+				        }
+				    )
+				in
+				    tiposDefinidos
+

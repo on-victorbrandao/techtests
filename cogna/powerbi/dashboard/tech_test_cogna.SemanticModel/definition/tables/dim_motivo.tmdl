@@ -1,0 +1,125 @@
+table dim_motivo
+	lineageTag: d0c4b332-1952-4f5a-aafb-b40e394f60ed
+
+	column motivo_id
+		dataType: string
+		lineageTag: e5eb9b0f-f857-4571-9b09-281e46790777
+		sourceColumn: motivo_id
+
+	column taxonomia_motivo
+		dataType: string
+		lineageTag: 12226f61-3618-4b5b-926e-6a3d061064b7
+		sourceColumn: taxonomia_motivo
+
+	column motivo_principal
+		dataType: string
+		lineageTag: 314a2fae-73b4-403f-a242-b12d2e776023
+		sourceColumn: motivo_principal
+
+	column macro_tema
+		dataType: string
+		lineageTag: 0ad94406-0ce7-44cd-aa2c-67f227bcccd4
+		sourceColumn: macro_tema
+
+	column tabulacao_original
+		dataType: string
+		lineageTag: 36715a60-469b-479f-a346-4782f754626b
+		sourceColumn: tabulacao_original
+
+	column mdc_original
+		dataType: string
+		lineageTag: abcf7e37-d6e6-4c60-9ca5-b83290c390f9
+		sourceColumn: mdc_original
+
+	column tab_nivel1
+		dataType: string
+		lineageTag: 0e66bb41-4077-443a-8184-f7513386324b
+		sourceColumn: tab_nivel1
+
+	column tab_nivel2
+		dataType: string
+		lineageTag: d424fa64-bd10-4392-b737-28b8172224ee
+		sourceColumn: tab_nivel2
+
+	column tab_nivel3
+		dataType: string
+		lineageTag: 5ebe379e-a2f4-4ce9-97d6-b42c384c14fd
+		sourceColumn: tab_nivel3
+
+	column tab_nivel4
+		dataType: string
+		lineageTag: 8be98a31-5279-4db4-ad37-f2f7a4ccccfd
+		sourceColumn: tab_nivel4
+
+	column tab_nivel5
+		dataType: string
+		lineageTag: 39d17155-3bdc-4713-9893-8551601e68c7
+		sourceColumn: tab_nivel5
+
+	column tab_nivel6
+		dataType: string
+		lineageTag: 32a2d7c3-6737-4e71-82bc-292211e726f1
+		sourceColumn: tab_nivel6
+
+	column tab_nivel7
+		dataType: string
+		lineageTag: 44363c66-63b9-4318-a223-d78380a455ac
+		sourceColumn: tab_nivel7
+
+	column qtd_niveis_tab
+		dataType: int64
+		lineageTag: 70bf9f05-3b67-4424-ba14-66007ef0a549
+		sourceColumn: qtd_niveis_tab
+
+	column modalidade_tab
+		dataType: string
+		lineageTag: 37dbe0ee-6591-4f46-9dcf-8b2ad2931806
+		sourceColumn: modalidade_tab
+
+	column eh_assunto_retencao
+		dataType: boolean
+		lineageTag: 8f87dd1c-32f1-49e2-93e2-14256eef9838
+		sourceColumn: eh_assunto_retencao
+
+	column flag_encaminhamento_retencao
+		dataType: boolean
+		lineageTag: b0a12ef0-81c3-4356-97df-657cd7ea0c00
+		sourceColumn: flag_encaminhamento_retencao
+
+	column desfecho_retencao
+		dataType: string
+		lineageTag: 141191d5-d4f7-4a66-865a-3976cd877a29
+		sourceColumn: desfecho_retencao
+
+	partition dim_motivo = m
+		mode: import
+		source =
+				let
+				    fonte = Parquet.Document(File.Contents(pDataPath & "\dim_motivo.parquet")),
+				
+				    tiposDefinidos = Table.TransformColumnTypes(
+				        fonte,
+				        {
+				            {"motivo_id", type text},
+				            {"taxonomia_motivo", type text},
+				            {"motivo_principal", type text},
+				            {"macro_tema", type text},
+				            {"tabulacao_original", type text},
+				            {"mdc_original", type text},
+				            {"tab_nivel1", type text},
+				            {"tab_nivel2", type text},
+				            {"tab_nivel3", type text},
+				            {"tab_nivel4", type text},
+				            {"tab_nivel5", type text},
+				            {"tab_nivel6", type text},
+				            {"tab_nivel7", type text},
+				            {"qtd_niveis_tab", Int64.Type},
+				            {"modalidade_tab", type text},
+				            {"eh_assunto_retencao", type logical},
+				            {"flag_encaminhamento_retencao", type logical},
+				            {"desfecho_retencao", type text}
+				        }
+				    )
+				in
+				    tiposDefinidos
+

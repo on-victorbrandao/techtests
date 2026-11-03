@@ -1,0 +1,29 @@
+model Model
+	culture: pt-BR
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: pt-BR
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_ProTooling = ["MCP-PBIModeling","DevMode"]
+
+annotation PBI_QueryOrder = ["dim_calendario","dim_hora","dim_canal","dim_aluno","dim_agente","dim_fila","dim_perfil_aluno","dim_motivo","fato_contato","fato_navegacao","fato_jornada","pDataPath"]
+
+ref table dim_calendario
+ref table dim_hora
+ref table dim_canal
+ref table dim_aluno
+ref table dim_agente
+ref table dim_fila
+ref table dim_perfil_aluno
+ref table dim_motivo
+ref table fato_contato
+ref table fato_navegacao
+ref table fato_jornada
+ref table _Medidas
+
+ref cultureInfo pt-BR
+

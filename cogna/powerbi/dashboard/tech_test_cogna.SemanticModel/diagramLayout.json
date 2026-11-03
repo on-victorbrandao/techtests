@@ -1,0 +1,170 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 0,
+            "y": 64
+          },
+          "nodeIndex": "dim_calendario",
+          "size": {
+            "height": 72,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 284,
+            "y": 64
+          },
+          "nodeIndex": "dim_hora",
+          "size": {
+            "height": 72,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 568,
+            "y": 64
+          },
+          "nodeIndex": "dim_canal",
+          "size": {
+            "height": 72,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 852,
+            "y": 64
+          },
+          "nodeIndex": "dim_aluno",
+          "size": {
+            "height": 72,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1136,
+            "y": 64
+          },
+          "nodeIndex": "dim_agente",
+          "size": {
+            "height": 72,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1420,
+            "y": 64
+          },
+          "nodeIndex": "dim_fila",
+          "size": {
+            "height": 72,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1704,
+            "y": 64
+          },
+          "nodeIndex": "dim_perfil_aluno",
+          "size": {
+            "height": 72,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1988,
+            "y": 64
+          },
+          "nodeIndex": "dim_motivo",
+          "size": {
+            "height": 72,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 127.71428571428532,
+            "y": 478.28571428571433
+          },
+          "nodeIndex": "fato_contato",
+          "nodeLineageTag": "eb4deeae-0efa-487c-b3c6-78579af1ddf1",
+          "size": {
+            "height": 72,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 724.57142857142878,
+            "y": 485.42857142857156
+          },
+          "nodeIndex": "fato_navegacao",
+          "nodeLineageTag": "3da25fb5-b995-4d2e-88f4-8ba99b0fd014",
+          "size": {
+            "height": 72,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1277.1428571428571,
+            "y": 491.142857142857
+          },
+          "nodeIndex": "fato_jornada",
+          "nodeLineageTag": "bccfdf61-2e17-4a16-bc4c-75401a7dbc3e",
+          "size": {
+            "height": 72,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1876.8571428571429,
+            "y": 228.57142857142858
+          },
+          "nodeIndex": "_Medidas",
+          "nodeLineageTag": "e972c2b0-b000-44ed-ba3b-fa8ea65add48",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "Todas as tabelas",
+      "zoomValue": 60,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "Todas as tabelas",
+  "defaultDiagram": "Todas as tabelas"
+}

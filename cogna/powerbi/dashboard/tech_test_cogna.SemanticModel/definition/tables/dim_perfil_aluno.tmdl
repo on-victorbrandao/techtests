@@ -1,0 +1,113 @@
+table dim_perfil_aluno
+	lineageTag: c9fb2731-d8aa-4506-95d1-aafd3669227a
+
+	column perfil_id
+		dataType: string
+		lineageTag: d1570cec-667d-4200-af6f-e02c4a88e253
+		sourceColumn: perfil_id
+
+	column canal_perfil
+		dataType: string
+		lineageTag: 8e999c85-24c0-446c-bbff-803e353797ad
+		sourceColumn: canal_perfil
+
+	column id_type_codigo
+		dataType: int64
+		lineageTag: 9ae01d7c-c839-4737-a417-5117edbeadc0
+		sourceColumn: id_type_codigo
+
+	column id_type_rotulo
+		dataType: string
+		lineageTag: 5f7505c2-0a11-4638-ad54-daf74654e5f2
+		sourceColumn: id_type_rotulo
+
+	column id_type_status
+		dataType: string
+		lineageTag: 28edd6e4-f090-4fff-b308-d56688199d7b
+		sourceColumn: id_type_status
+
+	column modalidade_codigo
+		dataType: int64
+		lineageTag: 5a0d6261-5b19-406f-9fd1-e57533694ddd
+		sourceColumn: modalidade_codigo
+
+	column modalidade_rotulo
+		dataType: string
+		lineageTag: 5e59054d-294b-441a-a735-1f7fd60261b0
+		sourceColumn: modalidade_rotulo
+
+	column modalidade_grupo
+		dataType: string
+		lineageTag: b33809e0-8984-4040-bad4-620a30d5d4eb
+		sourceColumn: modalidade_grupo
+
+	column modalidade_status
+		dataType: string
+		lineageTag: 4cf8acfb-30ba-4aeb-8d47-55ed95405cac
+		sourceColumn: modalidade_status
+
+	column categoria_aluno_codigo
+		dataType: int64
+		lineageTag: c90864e3-3616-47e8-a033-cbc7b54db3fd
+		sourceColumn: categoria_aluno_codigo
+
+	column categoria_aluno_rotulo
+		dataType: string
+		lineageTag: 480d965b-5ae7-4fcf-a755-fa7e5c6cac35
+		sourceColumn: categoria_aluno_rotulo
+
+	column categoria_aluno_status
+		dataType: string
+		lineageTag: 5a281bf3-bbd1-424c-8a07-871edcbfce81
+		sourceColumn: categoria_aluno_status
+
+	column instituicao_codigo
+		dataType: int64
+		lineageTag: c1e1be57-c80a-40e9-9f11-466772c8dd02
+		sourceColumn: instituicao_codigo
+
+	column instituicao_rotulo
+		dataType: string
+		lineageTag: 1080bba9-f691-4e27-945b-5fcee58b46ce
+		sourceColumn: instituicao_rotulo
+
+	column instituicao_nome_limpo
+		dataType: string
+		lineageTag: 65689e2d-674b-4596-b520-de7002929cb5
+		sourceColumn: instituicao_nome_limpo
+
+	column instituicao_status
+		dataType: string
+		lineageTag: ccfc2574-6fca-47bd-875f-e4e3a05c58a7
+		sourceColumn: instituicao_status
+
+	partition dim_perfil_aluno = m
+		mode: import
+		source =
+				let
+				    fonte = Parquet.Document(File.Contents(pDataPath & "\dim_perfil_aluno.parquet")),
+				
+				    tiposDefinidos = Table.TransformColumnTypes(
+				        fonte,
+				        {
+				            {"perfil_id", type text},
+				            {"canal_perfil", type text},
+				            {"id_type_codigo", Int64.Type},
+				            {"id_type_rotulo", type text},
+				            {"id_type_status", type text},
+				            {"modalidade_codigo", Int64.Type},
+				            {"modalidade_rotulo", type text},
+				            {"modalidade_grupo", type text},
+				            {"modalidade_status", type text},
+				            {"categoria_aluno_codigo", Int64.Type},
+				            {"categoria_aluno_rotulo", type text},
+				            {"categoria_aluno_status", type text},
+				            {"instituicao_codigo", Int64.Type},
+				            {"instituicao_rotulo", type text},
+				            {"instituicao_nome_limpo", type text},
+				            {"instituicao_status", type text}
+				        }
+				    )
+				in
+				    tiposDefinidos
+

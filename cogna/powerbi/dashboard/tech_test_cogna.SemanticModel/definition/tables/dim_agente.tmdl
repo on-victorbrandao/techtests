@@ -1,0 +1,65 @@
+table dim_agente
+	lineageTag: 63dc6460-3210-48f4-949d-aa8540645d0f
+
+	column agente_id
+		dataType: string
+		lineageTag: 15ab8568-8c82-407d-b36f-803a9ca0ff45
+		sourceColumn: agente_id
+
+	column agente_rotulo
+		dataType: string
+		lineageTag: e9e92ac2-1d9e-41ba-99e6-59396169745e
+		sourceColumn: agente_rotulo
+
+	column agente_hash
+		dataType: string
+		lineageTag: e80f428c-5c44-4c5e-b2a2-c1656dd3b23e
+		sourceColumn: agente_hash
+
+	column canal_agente
+		dataType: string
+		lineageTag: d4382569-dcec-43a7-8a35-b38fd3cf4c44
+		sourceColumn: canal_agente
+
+	column eh_agente_humano
+		dataType: boolean
+		lineageTag: 0f838aec-2bdc-4593-88e5-2fa2b6597181
+		sourceColumn: eh_agente_humano
+
+	column supervisor_id
+		dataType: string
+		lineageTag: 52e27537-8e42-4a22-8700-3d0b2fddc6b4
+		sourceColumn: supervisor_id
+
+	column supervisor_rotulo
+		dataType: string
+		lineageTag: f2ef6386-8a8b-4b13-89c3-794bde4f3045
+		sourceColumn: supervisor_rotulo
+
+	column supervisor_hash
+		dataType: string
+		lineageTag: 44a80737-c0a1-4174-a7a8-78183cf88190
+		sourceColumn: supervisor_hash
+
+	partition dim_agente = m
+		mode: import
+		source =
+				let
+				    fonte = Parquet.Document(File.Contents(pDataPath & "\dim_agente.parquet")),
+				
+				    tiposDefinidos = Table.TransformColumnTypes(
+				        fonte,
+				        {
+				            {"agente_id", type text},
+				            {"agente_rotulo", type text},
+				            {"agente_hash", type text},
+				            {"canal_agente", type text},
+				            {"eh_agente_humano", type logical},
+				            {"supervisor_id", type text},
+				            {"supervisor_rotulo", type text},
+				            {"supervisor_hash", type text}
+				        }
+				    )
+				in
+				    tiposDefinidos
+

@@ -1,0 +1,59 @@
+table dim_fila
+	lineageTag: dac881c0-9565-4eee-b8e2-e831984183a4
+
+	column fila_id
+		dataType: string
+		lineageTag: 75cfd9be-f338-4bb8-ba1d-93c99bcced7f
+		sourceColumn: fila_id
+
+	column recepcao_fila
+		dataType: string
+		lineageTag: 116a1f5e-e20e-487d-92dc-9fa617a8ca0a
+		sourceColumn: recepcao_fila
+
+	column fila_atend
+		dataType: string
+		lineageTag: 4d4ecb18-c7c3-4aad-9998-83bf852f7203
+		sourceColumn: fila_atend
+
+	column flag_filas_divergentes
+		dataType: boolean
+		lineageTag: ff5d75d0-bd27-4495-a95c-a364904a400e
+		sourceColumn: flag_filas_divergentes
+
+	column eh_retencao_fila
+		dataType: boolean
+		lineageTag: bb785042-12cc-4e2c-8122-500208724e6f
+		sourceColumn: eh_retencao_fila
+
+	column eh_fila_cra_retencao_exata
+		dataType: boolean
+		lineageTag: 1e4ebb8c-080e-42dc-8d49-c1877abc0497
+		sourceColumn: eh_fila_cra_retencao_exata
+
+	column grupo_fila
+		dataType: string
+		lineageTag: 866e83cf-9f8b-477a-9140-3f37336c6fa3
+		sourceColumn: grupo_fila
+
+	partition dim_fila = m
+		mode: import
+		source =
+				let
+				    fonte = Parquet.Document(File.Contents(pDataPath & "\dim_fila.parquet")),
+				
+				    tiposDefinidos = Table.TransformColumnTypes(
+				        fonte,
+				        {
+				            {"fila_id", type text},
+				            {"recepcao_fila", type text},
+				            {"fila_atend", type text},
+				            {"flag_filas_divergentes", type logical},
+				            {"eh_retencao_fila", type logical},
+				            {"eh_fila_cra_retencao_exata", type logical},
+				            {"grupo_fila", type text}
+				        }
+				    )
+				in
+				    tiposDefinidos
+

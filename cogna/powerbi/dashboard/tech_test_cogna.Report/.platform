@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "tech_test_cogna"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "55f1e2d4-8f00-4bfe-879a-356b6aa7b162"
+  }
+}

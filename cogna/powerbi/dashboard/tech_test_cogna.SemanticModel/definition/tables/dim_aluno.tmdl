@@ -1,0 +1,81 @@
+table dim_aluno
+	lineageTag: 8a1e4f95-b7a0-48ac-ae8a-ce8df7ba9344
+
+	column aluno_hash
+		dataType: string
+		lineageTag: 31d1b861-3f55-4d7a-b7b2-7d059931a761
+		sourceColumn: aluno_hash
+
+	column aluno_codigo
+		dataType: string
+		lineageTag: e7d597bf-a4af-4c73-aaf1-0ebb0c3ce6c1
+		sourceColumn: aluno_codigo
+
+	column total_contatos
+		dataType: int64
+		lineageTag: 20227e82-2272-4128-8735-fe4417418c96
+		sourceColumn: total_contatos
+
+	column qtd_canais_distintos
+		dataType: int64
+		lineageTag: 47f51426-4d87-4f14-b6ff-541e6aa0dc5a
+		sourceColumn: qtd_canais_distintos
+
+	column qtd_contatos_cc
+		dataType: int64
+		lineageTag: 17a52f38-6943-4d57-bb99-7c322fa95e50
+		sourceColumn: qtd_contatos_cc
+
+	column qtd_contatos_wa
+		dataType: int64
+		lineageTag: d91b5d64-fb34-45f4-b31b-10ae21717ad7
+		sourceColumn: qtd_contatos_wa
+
+	column qtd_contatos_video
+		dataType: int64
+		lineageTag: f74c81bc-9396-430b-a33a-086001628fd5
+		sourceColumn: qtd_contatos_video
+
+	column qtd_contatos_totem
+		dataType: int64
+		lineageTag: f83ba698-c1a2-41b7-bca2-42a7605ee496
+		sourceColumn: qtd_contatos_totem
+
+	column primeiro_contato_em
+		dataType: dateTime
+		lineageTag: da1efbb0-f378-47bd-9d8f-9180824729d0
+		sourceColumn: primeiro_contato_em
+
+	column ultimo_contato_em
+		dataType: dateTime
+		lineageTag: c7d28a8d-d233-4465-bb8c-7b5c30fc5149
+		sourceColumn: ultimo_contato_em
+
+	partition dim_aluno = m
+		mode: import
+		source =
+				let
+				    fonte = Parquet.Document(File.Contents(pDataPath & "\dim_aluno.parquet")),
+				
+				    tiposDefinidos = Table.TransformColumnTypes(
+				        fonte,
+				        {
+				            {"aluno_hash", type text},
+				            {"aluno_codigo", type text},
+				            {"total_contatos", Int64.Type},
+				            {"qtd_canais_distintos", Int64.Type},
+				            {"qtd_contatos_cc", Int64.Type},
+				            {"qtd_contatos_wa", Int64.Type},
+				            {"qtd_contatos_video", Int64.Type},
+				            {"qtd_contatos_totem", Int64.Type},
+				            {"primeiro_contato_em", type datetime},
+				            {"ultimo_contato_em", type datetime}
+				        }
+				    )
+				in
+				    tiposDefinidos
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

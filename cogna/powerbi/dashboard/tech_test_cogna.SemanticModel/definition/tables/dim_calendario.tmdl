@@ -1,0 +1,121 @@
+table dim_calendario
+	lineageTag: db1115a2-c522-4a69-8985-9dec2c921363
+
+	column data
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: d3c560f8-b337-48bd-8074-23940b7ddfee
+		summarizeBy: none
+		sourceColumn: data
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column ano_mes_num
+		dataType: string
+		lineageTag: a487ebfe-25c1-4028-b12c-469e1affbf86
+		sourceColumn: ano_mes_num
+		sortByColumn: ano_mes_ordem
+
+	column ano_mes_ordem
+		dataType: int64
+		lineageTag: 4e04c498-9d85-4344-ac4a-dde402d2ffb8
+		sourceColumn: ano_mes_ordem
+
+	column ano
+		dataType: int64
+		lineageTag: d7fa9fca-14cd-4bc5-af9f-2f0e64424cca
+		sourceColumn: ano
+
+	column mes
+		dataType: int64
+		lineageTag: b323289e-64a4-4270-823c-9845aa296c86
+		sourceColumn: mes
+
+	column dia
+		dataType: int64
+		lineageTag: c9ea841e-ab95-4f2e-89ec-c7dae954dd61
+		sourceColumn: dia
+
+	column dia_semana_num
+		dataType: int64
+		lineageTag: e51d2817-f910-44c7-9abf-9bab3c4bf710
+		sourceColumn: dia_semana_num
+
+	column dia_semana_nome
+		dataType: string
+		lineageTag: cc338220-73b0-40a3-bd48-840b2c06e168
+		sourceColumn: dia_semana_nome
+		sortByColumn: dia_semana_num
+
+	column mes_nome
+		dataType: string
+		lineageTag: 5512dd25-5ad1-4cea-91a6-c6f004a6edaf
+		sourceColumn: mes_nome
+		sortByColumn: mes
+
+	column mes_ano
+		dataType: string
+		lineageTag: 8e55dd21-5b71-4657-89bd-714929ff4f58
+		sourceColumn: mes_ano
+		sortByColumn: ano_mes_ordem
+
+	column semana_ano
+		dataType: int64
+		lineageTag: ef690b4c-9919-4c5f-82d0-5033395056a6
+		sourceColumn: semana_ano
+
+	column trimestre
+		dataType: string
+		lineageTag: 90a003b4-1217-49f7-a5f7-7f6a972e4b2f
+		sourceColumn: trimestre
+
+	column tipo_dia
+		dataType: string
+		lineageTag: 13cca721-bb5f-4bdd-9ac1-0444ba68c9a6
+		sourceColumn: tipo_dia
+
+	column dia_util
+		dataType: int64
+		lineageTag: 512597b0-7d29-4a85-a704-0379c99c39fe
+		sourceColumn: dia_util
+
+	column nome_feriado
+		dataType: string
+		lineageTag: 1ad7383b-dcea-4492-ae9a-a9b948744787
+		sourceColumn: nome_feriado
+
+	partition dim_calendario = m
+		mode: import
+		source =
+				let
+				    fonte = Parquet.Document(File.Contents(pDataPath & "\dim_calendario.parquet")),
+				
+				    tiposDefinidos = Table.TransformColumnTypes(
+				        fonte,
+				        {
+				            {"data", type date},
+				            {"ano_mes_num", type text},
+				            {"ano_mes_ordem", Int64.Type},
+				            {"ano", Int64.Type},
+				            {"mes", Int64.Type},
+				            {"dia", Int64.Type},
+				            {"dia_semana_num", Int64.Type},
+				            {"dia_semana_nome", type text},
+				            {"mes_nome", type text},
+				            {"mes_ano", type text},
+				            {"semana_ano", Int64.Type},
+				            {"trimestre", type text},
+				            {"tipo_dia", type text},
+				            {"dia_util", Int64.Type},
+				            {"nome_feriado", type text}
+				        }
+				    )
+				in
+				    tiposDefinidos
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

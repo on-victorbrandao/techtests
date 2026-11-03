@@ -1,0 +1,197 @@
+table fato_jornada
+	lineageTag: bccfdf61-2e17-4a16-bc4c-75401a7dbc3e
+
+	column contato_id
+		dataType: string
+		lineageTag: 7efdf6a3-358e-41ca-899f-aa93db76245a
+		sourceColumn: contato_id
+
+	column aluno_hash
+		dataType: string
+		lineageTag: af5a043b-1bd9-4ed0-a2ed-54004b7111e4
+		sourceColumn: aluno_hash
+
+	column canal
+		dataType: string
+		lineageTag: 4515b38d-c622-4e38-bdde-85792edbbf81
+		sourceColumn: canal
+
+	column data_contato
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 4007aa3e-ee6c-4977-be69-5e212380c251
+		summarizeBy: none
+		sourceColumn: data_contato
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column data_hora_contato
+		dataType: dateTime
+		lineageTag: c3955929-ce4f-4bd3-9066-e417da3521f6
+		sourceColumn: data_hora_contato
+
+	column ordem_contato_aluno
+		dataType: int64
+		lineageTag: a3896269-f60f-483d-abe0-b27ac107d897
+		sourceColumn: ordem_contato_aluno
+
+	column total_contatos_aluno
+		dataType: int64
+		lineageTag: 360b71ec-6359-4858-adc4-1c66b55c57e3
+		sourceColumn: total_contatos_aluno
+
+	column contato_id_anterior
+		dataType: string
+		lineageTag: a4f37a1a-4ac2-44b9-b059-f8e9369723b3
+		sourceColumn: contato_id_anterior
+
+	column canal_anterior
+		dataType: string
+		lineageTag: 88b98401-ef56-4bd9-97c6-fc220d5b57df
+		sourceColumn: canal_anterior
+
+	column data_hora_anterior
+		dataType: dateTime
+		lineageTag: 1d0266ff-a057-4996-a610-90442c29b330
+		sourceColumn: data_hora_anterior
+
+	column agente_id_anterior
+		dataType: string
+		lineageTag: ad37b76a-ef5f-4acd-ad53-987f31bfcb87
+		sourceColumn: agente_id_anterior
+
+	column segundos_desde_anterior
+		dataType: int64
+		lineageTag: 3911345d-8af0-48ff-99a2-f03933b35af9
+		sourceColumn: segundos_desde_anterior
+
+	column minutos_desde_anterior
+		dataType: double
+		lineageTag: 9c1a3c55-d332-4331-96cf-9ca84d5e9998
+		sourceColumn: minutos_desde_anterior
+
+	column fim_estimado_anterior
+		dataType: dateTime
+		lineageTag: cb688eb8-2eac-4a50-809d-831f11f7e8f6
+		sourceColumn: fim_estimado_anterior
+
+	column flag_sobreposicao_estimada
+		dataType: string
+		lineageTag: 7d4765a8-bde1-4167-a53a-907474823dd7
+		sourceColumn: flag_sobreposicao_estimada
+
+	column contato_id_proximo
+		dataType: string
+		lineageTag: 705b5bc1-2b27-4260-b945-5277472b4c6d
+		sourceColumn: contato_id_proximo
+
+	column canal_proximo
+		dataType: string
+		lineageTag: 985e1102-9802-42f7-a8d4-9cf0bb20460e
+		sourceColumn: canal_proximo
+
+	column data_hora_proximo
+		dataType: dateTime
+		lineageTag: 9db7b406-00f0-4708-b157-6d339766ae14
+		sourceColumn: data_hora_proximo
+
+	column segundos_ate_proximo
+		dataType: int64
+		lineageTag: f104840a-5130-46da-8a69-76e834419edd
+		sourceColumn: segundos_ate_proximo
+
+	column flag_recontato_mesmo_dia
+		dataType: boolean
+		lineageTag: be4b71ef-a43e-45a7-afad-7e2d124194c4
+		sourceColumn: flag_recontato_mesmo_dia
+
+	column flag_recontato_mesmo_dia_mesmo_canal
+		dataType: boolean
+		lineageTag: a921bc48-bf1b-44ee-ac94-7ed8f281948a
+		sourceColumn: flag_recontato_mesmo_dia_mesmo_canal
+
+	column flag_recontato_mesmo_dia_canal_com_agente
+		dataType: boolean
+		lineageTag: 8050d91d-5ac2-43ff-98eb-f13db566d7cb
+		sourceColumn: flag_recontato_mesmo_dia_canal_com_agente
+
+	column agente_id_atribuido_recontato
+		dataType: string
+		isHidden
+		lineageTag: e1dfb5ca-cc6e-4569-a018-59ee814601f7
+		sourceColumn: agente_id_atribuido_recontato
+
+	column flag_recontato_intracanal_mesmo_dia
+		dataType: boolean
+		lineageTag: 9e46b2ac-5284-4500-be7c-b4932f41c3b6
+		sourceColumn: flag_recontato_intracanal_mesmo_dia
+
+	column agente_id_atribuido_recontato_intracanal
+		dataType: string
+		isHidden
+		lineageTag: f758acde-2122-4ebc-a293-73713c03ede3
+		sourceColumn: agente_id_atribuido_recontato_intracanal
+
+	column flag_teve_wa_posterior
+		dataType: boolean
+		lineageTag: ae80de5f-555f-4553-b494-87976bb8b39b
+		sourceColumn: flag_teve_wa_posterior
+
+	column flag_teve_retencao_fila_posterior
+		dataType: boolean
+		lineageTag: 93975d2d-9a35-4a33-a4fd-9f5f70df9683
+		sourceColumn: flag_teve_retencao_fila_posterior
+
+	column flag_teve_retencao_assunto_posterior
+		dataType: boolean
+		lineageTag: 2a9c404e-774e-4357-95a7-d7de8a95ca6c
+		sourceColumn: flag_teve_retencao_assunto_posterior
+
+	partition fato_jornada = m
+		mode: import
+		source =
+				let
+				    fonte = Parquet.Document(File.Contents(pDataPath & "\fato_jornada.parquet")),
+				
+				    tiposDefinidos = Table.TransformColumnTypes(
+				        fonte,
+				        {
+				            {"contato_id", type text},
+				            {"aluno_hash", type text},
+				            {"canal", type text},
+				            {"data_contato", type date},
+				            {"data_hora_contato", type datetime},
+				            {"ordem_contato_aluno", Int64.Type},
+				            {"total_contatos_aluno", Int64.Type},
+				            {"contato_id_anterior", type text},
+				            {"canal_anterior", type text},
+				            {"data_hora_anterior", type datetime},
+				            {"agente_id_anterior", type text},
+				            {"segundos_desde_anterior", Int64.Type},
+				            {"minutos_desde_anterior", type number},
+				            {"fim_estimado_anterior", type datetime},
+				            {"flag_sobreposicao_estimada", type text},
+				            {"contato_id_proximo", type text},
+				            {"canal_proximo", type text},
+				            {"data_hora_proximo", type datetime},
+				            {"segundos_ate_proximo", Int64.Type},
+				            {"flag_recontato_mesmo_dia", type logical},
+				            {"flag_recontato_mesmo_dia_mesmo_canal", type logical},
+				            {"flag_recontato_mesmo_dia_canal_com_agente", type logical},
+				            {"agente_id_atribuido_recontato", type text},
+				            {"flag_recontato_intracanal_mesmo_dia", type logical},
+				            {"agente_id_atribuido_recontato_intracanal", type text},
+				            {"flag_teve_wa_posterior", type logical},
+				            {"flag_teve_retencao_fila_posterior", type logical},
+				            {"flag_teve_retencao_assunto_posterior", type logical}
+				        }
+				    )
+				in
+				    tiposDefinidos
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+
