@@ -73,12 +73,22 @@ def main() -> None:
             f"medidas_dax={res['total_medidas_dax']}, "
             f"divergencias={res['total_divergencias']}"
         )
+    elif cmd == "package":
+        from cogna_etl.package import run_packaging
+
+        res = run_packaging()
+        print(
+            f"[Package] status={res['status']}, "
+            f"arquivos_empacotados={res['total_files']}, "
+            f"destino={res['target_dir']}"
+        )
     elif cmd == "all":
         from cogna_etl.bronze import normalize_bronze
         from cogna_etl.dictionaries import generate_all_dictionaries
         from cogna_etl.gold import run_gold
         from cogna_etl.integrity import verify_content_integrity
         from cogna_etl.inventory import run_inventory
+        from cogna_etl.package import run_packaging
         from cogna_etl.profiling import run_full_profiling
         from cogna_etl.silver import run_silver
         from cogna_etl.validation import run_validation
@@ -91,10 +101,11 @@ def main() -> None:
         run_silver()
         run_gold()
         run_validation()
+        run_packaging()
     else:
         print(
             "Uso: python -m cogna_etl "
-            "[inventory|bronze|dictionaries|integrity|profiling|silver|gold|validate|all]"
+            "[inventory|bronze|dictionaries|integrity|profiling|silver|gold|validate|package|all]"
         )
 
 
