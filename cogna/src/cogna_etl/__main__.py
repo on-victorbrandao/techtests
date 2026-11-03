@@ -64,6 +64,15 @@ def main() -> None:
         res = run_gold()
         for tabela, qtd in res.items():
             print(f"[Gold] {tabela}: {qtd} linhas")
+    elif cmd == "validate":
+        from cogna_etl.validation import run_validation
+
+        res = run_validation()
+        print(
+            f"[Validate] status={res['status']}, "
+            f"medidas_dax={res['total_medidas_dax']}, "
+            f"divergencias={res['total_divergencias']}"
+        )
     elif cmd == "all":
         from cogna_etl.bronze import normalize_bronze
         from cogna_etl.dictionaries import generate_all_dictionaries
@@ -72,6 +81,7 @@ def main() -> None:
         from cogna_etl.inventory import run_inventory
         from cogna_etl.profiling import run_full_profiling
         from cogna_etl.silver import run_silver
+        from cogna_etl.validation import run_validation
 
         run_inventory()
         normalize_bronze()
@@ -80,10 +90,11 @@ def main() -> None:
         run_full_profiling()
         run_silver()
         run_gold()
+        run_validation()
     else:
         print(
             "Uso: python -m cogna_etl "
-            "[inventory|bronze|dictionaries|integrity|profiling|silver|gold|all]"
+            "[inventory|bronze|dictionaries|integrity|profiling|silver|gold|validate|all]"
         )
 
 
